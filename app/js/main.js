@@ -7,7 +7,7 @@ _app.startUp = () =>{
 
 _app.initSpotifyAPI = ()=> {
     const clientId = '5d488b4b52a34dfe8ef7a5db254489d2';
-    const clientSecret = '696c594f99be4ddb80275b53592f2513';
+    const clientSecret = 'ciao'; //RICORDA DI INSERIRE
     _app.requestToken(clientId, clientSecret);
 };
 
