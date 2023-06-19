@@ -1,9 +1,13 @@
-const io = require("socket.io");
-const server = io.listen(3000);
+import { Server } from "socket.io"
 
-server.on("connection", function(socket) {
-  console.log("user connected");
-  socket.emit("welcome", "welcome man");
+const io = new Server({ 
+  cors: "*"
 });
 
-    
+io.on("connection", (socket) => {
+  socket.on("hello", (username) => {
+    socket.emit("hello",`hello ${username}`);
+  }); 
+});
+
+io.listen(3000);

@@ -7,15 +7,9 @@
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <button id="testHelloBtn"></button>
+    </div>
     <script type="module" src="/main.js"></script>
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
-        <script>
-            var socket = io("http://localhost:3000");
-            // use your socket
-            socket.on("welcome", (message) => {
-                // do something with the message.
-            })
-        </script>
   </body>
 </html>

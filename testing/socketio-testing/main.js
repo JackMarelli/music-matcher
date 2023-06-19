@@ -1,7 +1,7 @@
 import './style.css'
 import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+import { io } from "socket.io-client";
 
 document.querySelector('#app').innerHTML = `
   <div>
@@ -13,7 +13,7 @@ document.querySelector('#app').innerHTML = `
     </a>
     <h1>Hello Vite!</h1>
     <div class="card">
-      <button id="counter" type="button"></button>
+      <button id="testHelloBtn" type="button">Test</button>
     </div>
     <p class="read-the-docs">
       Click on the Vite logo to learn more
@@ -21,4 +21,24 @@ document.querySelector('#app').innerHTML = `
   </div>
 `
 
-setupCounter(document.querySelector('#counter'))
+const _app = {}
+_app.testHelloBtn = document.querySelector("#testHelloBtn");
+
+_app.testHello = () => {
+  socket.emit("hello", "testUsername");
+}
+
+const socket = io("http://localhost:3000");
+
+socket.on("hello", (message) => {
+  console.log(message);
+})
+
+_app.startUp = () => {
+  _app.testHelloBtn.addEventListener("click", () => {
+    console.log("btn pressed");
+    _app.testHello();
+  });
+};
+
+_app.startUp();
