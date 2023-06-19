@@ -20,6 +20,10 @@ body {
   background-color: var(--primary);
 }
 
+#playlist,
+.buttonReset{
+  display: none;
+}
 /* test per il font variabile (puoi eliminare tutto) */
 @keyframes test {
   0% {
