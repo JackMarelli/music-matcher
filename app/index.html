@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Matcher</title>
-    <link rel="stylesheet" href="css/fonts.css">
     <link rel="stylesheet" href="css/framework.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    <div class="main">
-        <h1 class="test"> Music Matcher</h1>
-        
+    <div class="d-flex flex-column justify-between vh-100">
+        <h1 id="landing-header" class="f-display f-xl mx-3 mt-3">Music Matcher</h1>
+        <div class="vw-100 p-3 flex-grow d-flex justify-center align-center"><img class="" src="assets/images/png/hand_with_phone.png" alt="">
+        </div>
+        <p class="px-3 f-text f-m">Stop arguing over what to listen, let’s put some music matrimony back in your life!</p>
+        <a class="btn btn-fit" href="#">Start Creating</a>
         <button class="buttonToken" type="button">Connect Spotify!</button>
         <button class="buttonReset" type="button">LogOut</button>
         <p id="error"></p>
         <p id="username"></p>
         <div id="avatar"></div>
-        <div id="playlist" >
-            
+        <div id="playlist">
+
             <p id="fullPlaylist"></p>
         </div>
     </div>
     <script type="module" src="js/main.js"></script>
 </body>
+
 </html>
