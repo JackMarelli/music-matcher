@@ -26,12 +26,8 @@ async function getPlaylist(token, genres, artists, tracks, limit){
         
     }
     
-    const recommendedTracks = await getRecommendations();
-    const strTracks = recommendedTracks.map(
-        ({name, artists}) =>
-        `<br> ${name} by ${artists.map(artist => artist.name).join(', ')} `
-    );
-    return strTracks;
+    return await getRecommendations();
+    
 }
 
 function exportPlaylist(){

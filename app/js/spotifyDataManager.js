@@ -3,21 +3,18 @@ export default class SpotifyDataManager{
   #tokenRequestURL = "https://accounts.spotify.com/api/token";
 
   #clientId = "5d488b4b52a34dfe8ef7a5db254489d2";
-  #clientSecret = "ciao"; //RICORDA DI CAMBIARE
   #currentToken = null;
   #currentUser = null;
-
-
-  params = new URLSearchParams(window.location.search);
-  code = this.params.get("code");
-  errorCode = "";
+  #params = new URLSearchParams(window.location.search);
+  #code = this.#params.get("code");
+  #errorCode = "";
   #timeTokenCreation = null;
 
   constructor() {
   
   }
 
-  async initSpotifyAccess(){
+  async initAuthentication(){
     this.#redirectToAuthCodeFlow(this.#clientId);
     
   }
@@ -26,14 +23,12 @@ export default class SpotifyDataManager{
     // this.params = new URLSearchParams(window.location.search);
     // this.code = this.params.get("code");
     
-    this.errorCode = this.params.get("error");
-    if (this.errorCode) document.getElementById("username").innerHTML = "ERRORE! Connessione con Spotify NON avvenuta correttamente.";
+    this.#errorCode = this.#params.get("error");
+    if (this.#errorCode) document.getElementById("username").innerHTML = "ERRORE! Connessione con Spotify NON avvenuta correttamente.";
 
-    if (this.code && localStorage.length >= 1  ) {
-     
-      if(this.#currentToken === null ){
-        this.#currentUser = await this.changeToken();
-      }
+    if (this.#code && localStorage.length >= 1  ) {
+      this.#currentUser = await this.changeToken();
+      
       return await this.#fetchProfile(this.#currentToken)
       .then(profile =>{
         
@@ -46,7 +41,7 @@ export default class SpotifyDataManager{
   }
 
   async changeToken(){
-    this.#currentToken = await this.#getAccessToken(this.#clientId, this.code);
+    this.#currentToken = await this.#getAccessToken(this.#clientId, this.#code);
     this.#timeTokenCreation = Date.now();
     
     // console.log("changed token");

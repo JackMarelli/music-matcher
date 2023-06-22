@@ -9,13 +9,13 @@ _app.startUp = () =>{
     _app.sdm = new SpotifyDataManager();
     _app.initSpotifyData();
     _app.user = null;
-    document.querySelector(".buttonToken").addEventListener("click", _app.initSpotifyAPI);  
+    document.querySelector(".buttonToken").addEventListener("click", _app.requestSpotifyAuth);  
     document.querySelector(".buttonReset").addEventListener("click", _app.clearLocalStorage);   
 };
 
-_app.initSpotifyAPI = ()=> {
+_app.requestSpotifyAuth = ()=> {
     if(!localStorage.user){
-        _app.sdm.initSpotifyAccess();
+        _app.sdm.initAuthentication();
     } 
 };
 
@@ -87,7 +87,17 @@ _app.requestPlaylist = async () => {
     const tracks = ['2Cibr0RJo5kPxLJBDAv8Ry','5AXJPn1BS6L54Op3nb6jmk','5sWGPk7S6NGDLvOXRyWry8'];
     
     
-    document.querySelector("#fullPlaylist").innerHTML = await getPlaylist(_app.user.token, genres, artists, tracks, limit);
+    
+    const recommendedTracks = await getPlaylist(_app.user.token, genres, artists, tracks, limit);
+    console.log(recommendedTracks);
+    const strTracks = recommendedTracks.map(
+        ({name, artists, album}) =>
+        `<br> ${name} by ${artists.map(artist => artist.name).join(', ')} 
+        <img src=${album.images[0].url}  alt="null" width="60" height="60">
+        `
+    );
+
+    document.querySelector("#fullPlaylist").innerHTML = strTracks;
 }
 
 _app.startUp();
