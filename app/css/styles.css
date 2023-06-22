@@ -1,5 +1,5 @@
 #playlist,
-.buttonReset{
+.buttonReset {
   display: none;
 }
 
@@ -8,5 +8,14 @@
   padding: 12px 32px;
   background-color: var(--secondary);
   color: var(--primary);
-  
+}
+
+.btn-fit {
+  width: fit-content;
+}
+
+#fold img {
+  flex-grow: 1;
+  flex-shrink: 1;
+  object-fit: contain;
 }
