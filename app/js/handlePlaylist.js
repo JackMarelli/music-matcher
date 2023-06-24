@@ -14,7 +14,7 @@ async function getPlaylist(token, genres, artists, tracks, limit){
     const seed_artists = artists.join(',');
     const seed_tracks = tracks.join(',');
     
-
+    // tasto per dire ciao
     async function getRecommendations(){
         // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-recommendations
             return (await fetchWebApi(

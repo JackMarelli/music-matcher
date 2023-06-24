@@ -1,7 +1,4 @@
 export default class SpotifyDataManager{
-  #apiRequestURL = "https://api.spotify.com/";
-  #tokenRequestURL = "https://accounts.spotify.com/api/token";
-
   #clientId = "5d488b4b52a34dfe8ef7a5db254489d2";
   #currentToken = null;
   #currentUser = null;
@@ -10,19 +7,13 @@ export default class SpotifyDataManager{
   #errorCode = "";
   #timeTokenCreation = null;
 
-  constructor() {
-  
-  }
+  constructor() {}
 
   async initAuthentication(){
     this.#redirectToAuthCodeFlow(this.#clientId);
-    
   }
 
-  async loadSpotifyUserData(){
-    // this.params = new URLSearchParams(window.location.search);
-    // this.code = this.params.get("code");
-    
+  async loadSpotifyHostData(){ 
     this.#errorCode = this.#params.get("error");
     if (this.#errorCode) document.getElementById("username").innerHTML = "ERRORE! Connessione con Spotify NON avvenuta correttamente.";
 
@@ -43,8 +34,7 @@ export default class SpotifyDataManager{
   async changeToken(){
     this.#currentToken = await this.#getAccessToken(this.#clientId, this.#code);
     this.#timeTokenCreation = Date.now();
-    
-    // console.log("changed token");
+    // CHANGED TOKEN
     return {
       token: this.#currentToken,
       timeTokenCreation: this.#timeTokenCreation,
@@ -61,7 +51,7 @@ export default class SpotifyDataManager{
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
-    params.append("redirect_uri", "http://127.0.0.1:5500/app/");
+    params.append("redirect_uri", "http://127.0.0.1:5500/app/pages/setup.html");
     params.append("scope", "user-read-private user-read-email");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
@@ -95,7 +85,7 @@ export default class SpotifyDataManager{
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "http://127.0.0.1:5500/app/");
+    params.append("redirect_uri", "http://127.0.0.1:5500/app/pages/setup.html");
     params.append("code_verifier", verifier);
 
     const result = await fetch("https://accounts.spotify.com/api/token", {
