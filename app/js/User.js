@@ -1,16 +1,14 @@
 class User {
-	id = "";
 	username = "";
-	img = "";
-    token = "";
+	r1 = "";
+	r2 = "";
+	r3= "";
 
-	constructor (id= "", username = "", img = "", token = "", timeTokenCreation = null) {
-		// console.log("New user constructed!");
-		if (id) this.id = id;
+	constructor ( username = "", r1 = "", r2 = "", r3= "") {
 		if (username) this.username = username;
-        if (img) this.img = img;
-		if (token) this.token = token;
-        if (timeTokenCreation) this.timeTokenCreation = timeTokenCreation;
+        if (r1) this.r1 = r1;
+		if (r2) this.r2 = r2;
+        if (r3) this.r3 = r3;
 	}
 
 }

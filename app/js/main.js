@@ -1,15 +1,18 @@
-import { getPlaylist } from "./handlePlaylist.js";
+import { getArtists, getPlaylist } from "./handleRequests.js";
+import { qs,qsa, capitalize, uniqueArray } from "./utils.js";
 import SpotifyDataManager from "./spotifyDataManager.js";
-import User from "./User.js";
+import Host from "./Host.js";
 
 const _app = {};
-
 _app.startUp = () =>{
     // ad ogni page e referesh
     _app.sdm = new SpotifyDataManager();
     _app.host = null;
+    _app.usersnames = null;
+    _app.users = [];
     _app.initSpotifyData();
-    
+    _app.quizPhaseCounter = 0;
+
     //nella pagina di Login
     if (document.location.pathname.includes("spotifylogin.html")){
         document.querySelector(".buttonToken").addEventListener("click", _app.requestSpotifyAuth);  
@@ -18,6 +21,8 @@ _app.startUp = () =>{
 };
 
 
+
+//Funzioni che gestiscono i diversi users
 _app.createUser= () => {
     if(_app.userNumber == 6)return;
 
@@ -51,9 +56,8 @@ _app.removeUser= (e) => {
    e.path[1].remove();
    _app.userNumber--;
 }
-
 _app.getAndSaveUsername=() => {
-    if( _app.userNumber === 6 && localStorage.host){
+    if( localStorage.host){
         let usernameArray = [];
         let incomplete = false;
         const usersArray = document.querySelectorAll(".userText");
@@ -64,23 +68,19 @@ _app.getAndSaveUsername=() => {
             else{
                 usernameArray.push(user.value);
             }
-            
-            
         })
         
         if (!incomplete){
-            localStorage.users = JSON.stringify(usernameArray);
+            localStorage.usersnames = JSON.stringify(usernameArray);
             _app.startQuiz(usernameArray);
         }
-        
     }
-    
 }
-
 _app.startQuiz=(usernames) => {
-    console.log(usernames);
+    //console.log(usernames);
+    localStorage.removeItem("verifier"); // non so se servirà in fututo
+    document.location = '/app/pages/questions.html';
 }
-
 _app.setupUsers = (hostUsername = "") => {
     //nella pagina di SetUp
     if (document.location.pathname.includes("setup.html")){
@@ -97,94 +97,211 @@ _app.setupUsers = (hostUsername = "") => {
     }
 }
 
-_app.detectPhase = () => {
 
-    if(document.location.pathname.includes("pages") && !localStorage.host && !document.location.pathname.includes("spotifylogin.html")){
+
+//Funzioni che creano e gestiscono i quiz
+_app.initializeQuiz = (host) => {
+    _app.userIndex = 0;
+    
+    qs(".active-username").innerHTML = _app.usersnames[0];
+    _app.quizOptions1 =  ["english", "italian", "spanish", "german", "greek", "norwegian", "russian", "mandarin", "romanian", "french" , "danish", "korean", "japanese", "portuguese"];
+    _app.quizOptions2x =  ["acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music"];
+    _app.quizOptions2 =  ["acoustic", "afrobeat", "alternative", "black-metal",  "blues", "bossanova",  "children", "chill", "classical", "country", "dance", "dancehall", "death-metal", "disco", "disney", "drum-and-bass",  "dubstep", "edm", "electro", "electronic", "emo", "folk",  "funk", "garage", "german", "gospel", "goth", "groove", "grunge", "guitar", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino",  "metal", "metalcore", "minimal-techno", "movies", "mpb",  "opera",  "party",  "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "reggae", "reggaeton", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "show-tunes", "singer-songwriter",  "sleep", "songwriter", "soul", "soundtracks",  "study", "summer", "synth-pop", "tango", "techno", "work-out", "world-music"];
+
+    qs(".submit").addEventListener("click", _app.registerQuizResponse)
+    _app.createQuiz(_app.quizOptions1);
+}
+_app.createQuiz= (options) => {
+
+    _app.quizContainer = document.querySelector(".input-box-wrapper");
+    for (let option of options){
+        _app.quizContainer.innerHTML += `
+        <div class="box">
+            <input type="checkbox" value=${option} class="checkbox" id=${option}>
+            <label for=${option}>${capitalize(option)}</label>
+        </div>
+        `
+    }
+   
+}
+_app.handleQuiz = (result) => {
+
+    _app.quizPhaseCounter++;
+    //console.log(_app.quizPhaseCounter);
+    _app.quizContainer.innerHTML = '';
+    //console.log(_app.quizPhaseCounter);
+    if(_app.quizPhaseCounter == 0){
+        
+    }
+    else if(_app.quizPhaseCounter == 1){
+        _app.createQuiz(_app.quizOptions2);
+        _app.quizResponse1 = result;
+    }     
+    else if(_app.quizPhaseCounter== 2){
+        _app.quizResponse2 = result;
+        console.log("FASE 2")
+        _app.requestArtist(_app.quizResponse1,_app.quizResponse2);
+    }
+    else if(_app.quizPhaseCounter== 3){
+        console.log("FASE 3")
+        _app.quizResponse3 = result;
+        const obj = {
+            username: _app.usersnames[_app.userIndex],
+            r1: _app.quizResponse1 ,
+            r2: _app.quizResponse2 ,
+            r3: _app.quizResponse3,
+        }
+        _app.users.push(obj)
+        
+        console.log("salvare user e passare al prossimo");
+        _app.userIndex++;
+        _app.quizPhaseCounter= 0;
+        
+        
+        
+        if ( !_app.usersnames[_app.userIndex ]){
+            localStorage.setItem("users", JSON.stringify(_app.users));
+            _app.quizContainer.innerHTML = '';
+            console.log("FINE QUIZ");
+            document.location = '/app/pages/result.html';
+        }
+        else{
+            qs(".active-username").innerHTML = _app.usersnames[_app.userIndex];
+            _app.createQuiz(_app.quizOptions1);
+        } 
+        
+    }
+}
+_app.registerQuizResponse= () => {
+    
+    let checkboxes = document.querySelectorAll(".checkbox");
+    let resultsArray = [];
+    for (let checkbox of checkboxes){
+        if(checkbox.checked == true) resultsArray.push(checkbox.value);
+        else resultsArray = resultsArray.filter(e =>  e !== checkbox.value);     
+    }
+   //console.log(resultsArray);
+    if(resultsArray.length > 0){
+       _app.handleQuiz(resultsArray);
+    }
+}
+
+
+
+//Funzioni principali e generali
+_app.detectPhase = () => {
+    if(document.location.pathname.includes("pages") && !localStorage.host && !document.location.pathname.includes("spotifylogin")){
         document.location = '/app/pages/spotifylogin.html';
-        console.log("ritorna indietro");
     }
     if(document.location.pathname.includes("spotifylogin.html") && localStorage.host){
         document.location = '/app/pages/setup.html';
     }
+    if(document.location.pathname.includes("setup.html") && _app.host){
+        _app.setupUsers(_app.host.username);
+    }
+    if(document.location.pathname.includes("questions.html") && _app.host){
+        _app.initializeQuiz(_app.host);
+    }
+    if(document.location.pathname.includes("result.html")){
+        if(localStorage.users)_app.initializePlaylist();
+        else document.location = '/app/pages/spotifylogin.html';
+    }
 }
-
 _app.requestSpotifyAuth = ()=> {
-    if(!localStorage.host){
-        _app.sdm.initAuthentication();
-    } 
+    if(!localStorage.host) _app.sdm.initAuthentication();
 };
-
 _app.initSpotifyData= ()=> {
     if(localStorage.host){
         _app.loadLocalHostData();
-        _app.displayUser();
-        _app.detectPhase();
+        
+        _app.displayUser();  // per mostrare icona spotify da riposizionare
     }
     else{
         _app.sdm.loadSpotifyHostData()
         .then(profile =>{
-            if(!profile) return;
-            _app.host = new User(profile.id, profile.display_name, profile.images[0].url, profile.token, profile.timeTokenCreation);
-            _app.saveLocalData();
-            _app.displayUser();
-            _app.detectPhase();
+            if(profile) {
+                _app.host = new Host(profile.id, profile.display_name, profile.images[0].url, profile.token, profile.timeTokenCreation);
+                _app.saveLocalData();
+                _app.displayUser();  // per mostrare icona spotify da riposizionare
+            }
+            _app.detectPhase(); 
         });
     }
 }
-
 _app.displayUser = () => {
-    if(document.location.pathname.includes("setup.html")){
-        _app.setupUsers(_app.host.username);
-    }
-    
-    if (_app.host.img && document.location.pathname.includes("spotifylogin.html")) {
+    if (_app.host.img && document.location.pathname.includes("setup.html")) {
         const profileImage = new Image(50, 50);
         profileImage.src = _app.host.img;
         document.getElementById("avatar").appendChild(profileImage);
     }
+
+    
 }
 _app.clearLocalStorage = () => {
     localStorage.clear();
     document.location = '/app/pages/spotifylogin.html';
 };
-
 _app.saveLocalData = () => {
 	localStorage.host = JSON.stringify(_app.host);
-    // console.log(_app.user);
 };
-
 _app.loadLocalHostData = () => {
     if (localStorage.host) {
         const parsedHost = JSON.parse(localStorage.host);
-        const currentTime = Date.now();
+        const currentTime = Date.now(); //METTERE TUTTO IL CHECK NEGLI UTILS
         let timeDiff = currentTime - parsedHost.timeTokenCreation;
-        timeDiff /= 1000; //trasforma i millisecondi in secondi
+        timeDiff /= 1000; //trasforma i millisecondi in secondi 
         if(timeDiff >= 3590) { //3600
             _app.clearLocalStorage();
             return;
         }
-        
         _app.host = parsedHost;
-        
-        
     }
+    if(localStorage.usersnames){
+        _app.usersnames = JSON.parse(localStorage.usersnames);
+    }
+    if(localStorage.users){
+        _app.users = JSON.parse(localStorage.users);
+    }
+    _app.detectPhase();
 };
+_app.requestArtist = async (genres, countries) => {
+    const artists = await getArtists(_app.host.token, genres, countries);
+    let artistsHTML = "";
+    artists.artists.items.forEach(artist => {
+        const img = (artist.images[2].url) ?`<img src=${artist.images[2].url}  alt="null" width="60" height="60"></img>` : "";
+        artistsHTML += `
+        <div class="box">
+            <input type="checkbox" value=${artist.id} class="checkbox" id=${artist.id}>
+            <label for=>${artist.name} </label>
+            ${img}
+        </div>
+        `
+    });
+    _app.quizContainer.innerHTML = artistsHTML;
+}
 
-_app.requestPlaylist = async () => {
-    const limit = "20";
-    const genres = ["indie"];
-    const artists = ['4NHQUGzhtTLFvgF5SZesLK'];
-    const tracks = ['2Cibr0RJo5kPxLJBDAv8Ry','5AXJPn1BS6L54Op3nb6jmk','5sWGPk7S6NGDLvOXRyWry8'];
-    const recommendedTracks = await getPlaylist(_app.host.token, genres, artists, tracks, limit);
-    console.log(recommendedTracks);
+
+
+//funzioni che creano e gesticono la playlist finale
+_app.initializePlaylist= () => {
+    let responses3 = [];
+    //console.log(_app.users);
+    for (let i = 0; i < _app.users.length; i++) {
+        responses3 = responses3.concat(_app.users[i].r3)
+    }
+    console.log(uniqueArray(responses3));
+    _app.requestPlaylist(uniqueArray(responses3).slice(0,5));
+};
+_app.requestPlaylist = async (tracks)=> {
+    const recommendedTracks = await getPlaylist(_app.host.token, null, tracks);
+    //console.log(recommendedTracks);
     const strTracks = recommendedTracks.map(
         ({name, artists, album}) =>
         `<br> ${name} by ${artists.map(artist => artist.name).join(', ')} 
-        <img src=${album.images[0].url}  alt="null" width="60" height="60">
-        `
+        <img src=${album.images[0].url}  alt="null" width="60" height="60">`
     );
-    document.querySelector("#fullPlaylist").innerHTML = strTracks;
-    return
+
+    document.querySelector("#full-playlist").innerHTML = strTracks;
 }
 
 _app.startUp();

@@ -15,7 +15,7 @@ export default class SpotifyDataManager{
 
   async loadSpotifyHostData(){ 
     this.#errorCode = this.#params.get("error");
-    if (this.#errorCode) document.getElementById("username").innerHTML = "ERRORE! Connessione con Spotify NON avvenuta correttamente.";
+    if (this.#errorCode) document.getElementById("error").innerHTML = "ERRORE! Connessione con Spotify NON avvenuta correttamente.";
 
     if (this.#code && localStorage.length >= 1  ) {
       this.#currentUser = await this.changeToken();
