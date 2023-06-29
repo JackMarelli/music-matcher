@@ -20,42 +20,46 @@
             </div>
             <div class="row flex-grow-1">
                 <div class="col d-flex flex-column justify-content-between h-100 overflow-hidden">
-                    <div class="d-flex flex-column justify-content-start align-items-center overflow-auto">
+                    <div class="d-flex flex-column justify-content-start align-items-center overflow-auto input-box-wrapper">
                             <div class="w-100 d-flex justify-content-start align-items-center text-input mb-2"><img
-                                    src="../assets/images/svg/user.svg" alt=""><input class="w-100 h-100" type="text"
-                                    name="" id="" placeholder="Insert username"><button><img
-                                        src="../assets/images/svg/remove.svg" alt=""></button></div>
+                                src="../assets/images/svg/user.svg" alt=""><input class="w-100 h-100 userText" type="text"
+                                name="" id="d" placeholder="Insert username">
+                            </div>
+                                
+    
                         <div class="w-auto d-flex justify-content-center align-items-center add-button">
                             <div class="pe-2">Add</div><img src="../assets/images/svg/plus.svg" alt=""></button>
                         </div>
                     </div>
-                    <button type="button" class="mm-btn mm-btn-100 mb-3">Start Survey</button>
+                    <button type="button" class="mm-btn mm-btn-100 mb-3 start-quiz">Start Survey</button>
                 </div>
             </div>
             <div class="row">
                 <div class="col d-flex justify-content-between">
+                    <button type="button" class="log-out">Log Out</button>
+
                     <a class="mm-cta-small">About</a>
                     <a class="mm-cta-small">Privacy Poilcy</a>
                 </div>
             </div>
         </div>
     </div>
+
+
     <div class="testing d-none">
         <div id="avatar"></div>
         <p id="error"></p>
         <div class="input-box-wrapper">
             <div class="user0">
                 <label for="0">Username:</label>
-                <input type="text" value="" id="d" class="userText">
+                <input type="text" value="" id="s" class="userTextdd">
             </div>
         </div>
         <button type="button" class="add-user-button">Add User</button>
-        <button type="button" class="log-out">Log Out</button>
-        <br><br>
-        <button type="button" class="start-quiz">Start Quiz</button>
+        
         <p id="artists"></p>
     </div>
-
+    <script type="module" src="../js/main.js"></script>
 </body>
 
 </html>

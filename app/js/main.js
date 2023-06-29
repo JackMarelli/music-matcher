@@ -26,34 +26,51 @@ _app.startUp = () =>{
 _app.createUser= () => {
     if(_app.userNumber == 6)return;
 
+
     let userDiv = document.createElement("div");
-    userDiv.className = "user";
+    userDiv.className = "w-100 d-flex justify-content-start align-items-center text-input mb-2 user";
+
+    let userImg = document.createElement("img");
+    userImg.src = "../assets/images/svg/user.svg";
 
     let deleteButton = document.createElement("button");
-    deleteButton.type =  "button";
-    deleteButton.className =  "button";
-    deleteButton.innerHTML = "Remove";
+    let removeImg = document.createElement("img");
+    removeImg.src = "../assets/images/svg/remove.svg";
+    
+    
 
-    let labelUser = document.createElement("label");
-    //labelUser.htmlFor =  _app.userNumber.toString();
-    labelUser.innerHTML =  "Username:";
+    
 
     let inputUser = document.createElement("input");
     //inputUser.id =  _app.userNumber.toString();
     inputUser.type =  "text";
-    inputUser.className =  "userText";
+    inputUser.className =  "w-100 h-100 userText";
+    inputUser.placeholder = "Insert username"
 
-    deleteButton.addEventListener("click", _app.removeUser); 
-    _app.usersContainer.appendChild(userDiv);
-    userDiv.appendChild(labelUser);
+    
+//_app.usersContainer.appendChild(userDiv);
+    _app.usersContainer.insertBefore(userDiv, _app.usersContainer.childNodes[_app.usersContainer.childElementCount]);
+    userDiv.appendChild(userImg);
     userDiv.appendChild(inputUser);
+    
     userDiv.appendChild(deleteButton);
+    deleteButton.appendChild(removeImg);
+    deleteButton.addEventListener("click", function(e){
+        if (e.target !== this) _app.removeUser(e)
+        
+    }); 
 
     _app.userNumber++;
+   
     
+    /*<div class="w-100 d-flex justify-content-start align-items-center text-input mb-2">
+                                <img src="../assets/images/svg/user.svg" alt="">
+                                <input class="w-100 h-100" type="text" name="" id="" placeholder="Insert username">
+                                <button><img src="../assets/images/svg/remove.svg" alt=""></button>
+    </div>*/
 }
 _app.removeUser= (e) => {
-   e.path[1].remove();
+   e.path[2].remove();
    _app.userNumber--;
 }
 _app.getAndSaveUsername=() => {
@@ -61,9 +78,11 @@ _app.getAndSaveUsername=() => {
         let usernameArray = [];
         let incomplete = false;
         const usersArray = document.querySelectorAll(".userText");
+        
         usersArray.forEach((user) => {
             if(user.value === ""){
                incomplete = true;
+               
             }
             else{
                 usernameArray.push(user.value);
@@ -88,8 +107,9 @@ _app.setupUsers = (hostUsername = "") => {
         document.querySelector("#d").value = hostUsername;
         const startQuizButton = document.querySelector(".start-quiz");
 
+
         _app.usersContainer = document.querySelector(".input-box-wrapper");
-        const addUserButton = document.querySelector(".add-user-button");
+        const addUserButton = document.querySelector(".add-button");
         _app.userNumber = 1;
         
         addUserButton.addEventListener("click", _app.createUser);
