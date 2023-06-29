@@ -25,8 +25,8 @@ async function getPlaylist(token, genres, artists, tracks, limit){
     return await getRecommendations();
 }
 
-async function getArtists(token , genres =[], artists = []){
-    const filters = genres.concat(artists)
+async function getArtists(token , genres =[], countries = []){
+    const filters = genres.concat(countries)
     //const filters = artists
     const seeds = filters.join(',');
 
@@ -37,7 +37,37 @@ async function getArtists(token , genres =[], artists = []){
             
         ));
     }
-    return await getArtistRecommendations();
+
+    //soluzione provvisoria
+    let result = await getArtistRecommendations();
+    if (await result.artists.items.length< 5){
+        console.log(countries);
+        return await getArtists(token , genres);
+        
+    }
+    else return await result;
 }
 
-export { getPlaylist, getArtists};
+
+const tracksUri = [
+    'spotify:track:3USTT2XAeWrO2ytAqsc1pe','spotify:track:24ypJV5Jdt7MOSDrrPu2M8','spotify:track:0hReXAWKqGzHBYnw0S1CXu','spotify:track:0ei5muxdohCWLBGZLqdRXd','spotify:track:3CmcuojFmw6lD6IFqlMY6l','spotify:track:7FsuMwalG48ZfjklkSkuJa','spotify:track:16UKRoJsS0i0eUNCCroz7n','spotify:track:6arjHcZGseJYCALGwcEi4y','spotify:track:5AXJPn1BS6L54Op3nb6jmk','spotify:track:3PbazHXYd4p53L8ygiPh8A'
+];
+  
+async function createPlaylist(token, user_id, tracksUri){
+  
+    const playlist = await fetchWebApi(token,
+        `v1/users/${user_id}/playlists`, 'POST', {
+        "name": "Playlist by Music Matcher",
+        "description": "Playlist created by Albyeah",
+        "public": false
+    })
+  
+    await fetchWebApi(token,
+      `v1/playlists/${playlist.id}/tracks?uris=${tracksUri.join(',')}`,
+      'POST'
+    );
+  
+    return playlist.id;
+}
+
+export { getPlaylist, getArtists, createPlaylist};

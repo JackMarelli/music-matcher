@@ -1,4 +1,4 @@
-import { getArtists, getPlaylist } from "./handleRequests.js";
+import { getArtists, getPlaylist, createPlaylist } from "./handleRequests.js";
 import { qs,qsa, capitalize, uniqueArray } from "./utils.js";
 import SpotifyDataManager from "./spotifyDataManager.js";
 import Host from "./Host.js";
@@ -212,7 +212,7 @@ _app.requestSpotifyAuth = ()=> {
 };
 _app.initSpotifyData= ()=> {
     if(localStorage.host){
-        _app.loadLocalHostData();
+        _app.loadLocalStorage();
         
         _app.displayUser();  // per mostrare icona spotify da riposizionare
     }
@@ -244,7 +244,7 @@ _app.clearLocalStorage = () => {
 _app.saveLocalData = () => {
 	localStorage.host = JSON.stringify(_app.host);
 };
-_app.loadLocalHostData = () => {
+_app.loadLocalStorage = () => {
     if (localStorage.host) {
         const parsedHost = JSON.parse(localStorage.host);
         const currentTime = Date.now(); //METTERE TUTTO IL CHECK NEGLI UTILS
@@ -262,10 +262,16 @@ _app.loadLocalHostData = () => {
     if(localStorage.users){
         _app.users = JSON.parse(localStorage.users);
     }
+    if(localStorage.playlist){
+       _app.playlist = localStorage.playlist;
+    
+    }
     _app.detectPhase();
 };
 _app.requestArtist = async (genres, countries) => {
     const artists = await getArtists(_app.host.token, genres, countries);
+    console.log(artists);
+
     let artistsHTML = "";
     artists.artists.items.forEach(artist => {
         const img = (artist.images[2].url) ?`<img src=${artist.images[2].url}  alt="null" width="60" height="60"></img>` : "";
@@ -294,14 +300,53 @@ _app.initializePlaylist= () => {
 };
 _app.requestPlaylist = async (tracks)=> {
     const recommendedTracks = await getPlaylist(_app.host.token, null, tracks);
-    //console.log(recommendedTracks);
-    const strTracks = recommendedTracks.map(
-        ({name, artists, album}) =>
-        `<br> ${name} by ${artists.map(artist => artist.name).join(', ')} 
-        <img src=${album.images[0].url}  alt="null" width="60" height="60">`
-    );
+    _app.songsContainer = qs(".playlist-container");
 
-    document.querySelector("#full-playlist").innerHTML = strTracks;
+    recommendedTracks.forEach(e => {
+        let songDiv = document.createElement("div");
+        songDiv.className = "song-container";
+        songDiv.id = `${e.id}`;
+
+        let songTitle = document.createElement("p");
+        songTitle.innerHTML = `${e.name} by ${e.artists.map(artist => artist.name).join(', ')}`;
+
+        let songImg = document.createElement("img");
+        songImg.src = `${e.album.images[1].url} `;
+        songImg.width = "60";
+        
+        let deleteButton = document.createElement("button");
+        deleteButton.type =  "button";
+        deleteButton.className =  "remove-button";
+        deleteButton.innerHTML = "Remove";
+
+        deleteButton.addEventListener("click", _app.removeSong); 
+        _app.songsContainer.appendChild(songDiv);
+        songDiv.appendChild(songTitle);
+        songDiv.appendChild(songImg);
+        songDiv.appendChild(deleteButton);
+    });
+    
+    //PER CREARE IL BOTTONE (DOVREBBE GIA ESSERE NEL HTML)
+    const button = document.createElement("button");
+    button.className = "export-playlist";
+    button.innerHTML = "Save to Spotify"
+    button.addEventListener("click", _app.createPlaylist);
+    _app.songsContainer.appendChild(button);
+}
+_app.removeSong = (e) => {
+    e.path[1].remove();
+}
+_app.createPlaylist = async () => {
+    _app.songs = [];
+    const songs = qsa(".song-container");
+    songs.forEach(e => {
+        _app.songs.push(`spotify:track:${e.id}`);
+    })
+    _app.playlistID = await createPlaylist(_app.host.token, _app.host.id, _app.songs);
+    localStorage.setItem("playlist", await _app.playlistID);
+
+    //window.location.replace(`https://open.spotify.com/playlist/${_app.playlistID}`);
+    
 }
 
 _app.startUp();
