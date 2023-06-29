@@ -1,29 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Music Matcher</title>
-    <link rel="stylesheet" href="css/framework.css" />
-    <link rel="stylesheet" href="css/styles.css" />
-  </head>
-  
-  <body>
-    <div id="fold" class="d-flex flex-column justify-between vh-100">
-      <h1 id="landing-header" class="f-display f-xl px-3 pt-3">
-        Music Matcher
-      </h1>
-      <img class="p-5" src="assets/images/png/hand_with_phone.png" alt="" />
-      <p class="px-3 f-text f-m">
-        Stop arguing over what to listen, let’s put some music matrimony back in
-        your life!
-      </p>
-      <a class="btn btn-fit f-text m-3" href="/app/pages/spotifylogin.html">Start Creating</a>
-    </div>
 
-    <div class="testing">
-     
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Music Matcher</title>
+  <link rel="stylesheet" href="css/bootstrap.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+  <div class="container vh-100 py-3 d-flex flex-column justify-content-between">
+    <div class="row">
+      <div class="col">
+        <h1 class="besley">Music<br>Matcher</h1>
+      </div>
     </div>
-    <script type="module" src="js/main.js"></script>
-  </body>
+    <div class="row flex-grow-1 flex-shrink-1">
+      <div class="col d-flex justify-content-center align-items-center"><img class="img-fluid mx-auto p-4"
+          src="assets/images/png/hand_with_phone.png" alt=""></div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p>Stop arguing over what to listen, let's put some music matrimony back in your life!</p>
+        <button type="button" onclick="javascript:window.location.href='pages/spotifylogin.html'"
+          class="mm-btn mm-btn-fit">Start Creating</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="testing">
+
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+
 </html>

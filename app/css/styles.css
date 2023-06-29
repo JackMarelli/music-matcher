@@ -1,21 +1,135 @@
-#playlist,
-.buttonReset {
+@font-face {
+  font-family: "Space Grotesk";
+  src: url(../assets/fonts/spacegrotesk-variable.ttf);
+}
+
+@font-face {
+  font-family: "Besley";
+  src: url(../assets/fonts/besley-variable.ttf);
+}
+
+::-webkit-scrollbar {
   display: none;
 }
 
-.btn {
-  border-radius: 999px;
-  padding: 12px 32px;
-  background-color: var(--secondary);
-  color: var(--primary);
+:root {
+  --primary: #fcf4f0;
+  --secondary: #090909;
+  --accent: #848484;
 }
 
-.btn-fit {
+* {
+  font-family: "Space Grotesk";
+}
+
+html,
+body {
+  background-color: var(--primary);
+}
+
+a,
+a:hover,
+a:focus,
+a:visited {
+  color: var(--secondary);
+}
+
+a,
+.mm-btn,
+.mm-cta-small {
+  cursor: pointer;
+}
+
+button {
+  border: none;
+  outline: none;
+}
+
+.besley {
+  font-family: "Besley";
+  font-size: 17vw;
+  line-height: 95%;
+  font-weight: 800;
+}
+
+*:not(.besley) {
+  font-size: 20px;
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 500;
+  line-height: 105%;
+  letter-spacing: -1px;
+}
+
+.text-input {
+  border-radius: 999px;
+  border: 1.5px solid black;
+  padding: 10px 8px 10px 16px;
+}
+
+.text-input > input {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  padding: 0 0 0 14px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.add-button {
+  background-color: transparent;
+  border-radius: 999px;
+  border: 1.5px solid black;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.text-input > button,
+.add-button > button {
+  background-color: transparent;
+}
+
+.mm-btn {
+  border-radius: 999px;
+  padding: 11px 32px;
+  background-color: var(--secondary);
+  color: var(--primary);
+
+  font-weight: 400;
+  letter-spacing: -0.6px;
+}
+
+.mm-btn-fit {
   width: fit-content;
+}
+
+.mm-btn-100 {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mm-btn:active {
+  transform: scale(0.97);
+  transition: 10ms linear;
+}
+
+.mm-cta-small {
+  font-size: 14px;
+  text-decoration: underline;
+  margin: 0;
 }
 
 #fold img {
   flex-grow: 1;
   flex-shrink: 1;
   object-fit: contain;
+}
+
+#playlist,
+.buttonReset {
+  display: none;
 }
