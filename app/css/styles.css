@@ -146,13 +146,13 @@ button {
   overflow: scroll;
 }
 
-.input-box-wrapper {
+.questions-panel > .input-box-wrapper {
   height: 100%;
   width: 96vw;
   border: 1px solid red;
 }
 
-.input-box-wrapper > .box {
+.questions-panel > .input-box-wrapper > .box {
   margin: 0 0 1em 0;
 }
 
