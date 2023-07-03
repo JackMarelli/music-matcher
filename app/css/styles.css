@@ -121,6 +121,27 @@ button {
   margin: 0;
 }
 
+.question-number {
+  width: 3em;
+  aspect-ratio: 1 / 1;
+  border: 1px solid black;
+  border-radius: 999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.active-username {
+  height: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin: 0 0 0 1em;
+  padding: 0 0 0 1em;
+  border: 1px solid black;
+  border-radius: 999px;
+}
+
 #fold img {
   flex-grow: 1;
   flex-shrink: 1;
