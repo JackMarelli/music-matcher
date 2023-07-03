@@ -14,19 +14,21 @@
         <div class="container vh-100 py-3 d-flex flex-column justify-content-between">
             <div class="row">
                 <div class="col d-flex flex-column">
-                    <a href="../index.html" class="mm-cta-small justify-self-start align-self-start">Back</a>
+                    <div class="d-flex justify-content-between">
+                        <a href="../index.html" class="mm-cta-small">Back</a>
+                        <button type="button" class="log-out mm-cta-small">Log Out</button>
+                    </div>
                     <p class="text-center mt-3 pt-5 fs-4">Add your mates:</p>
                 </div>
             </div>
             <div class="row flex-grow-1">
                 <div class="col d-flex flex-column justify-content-between h-100 overflow-hidden">
-                    <div class="d-flex flex-column justify-content-start align-items-center overflow-auto input-box-wrapper">
-                            <div class="w-100 d-flex justify-content-start align-items-center text-input mb-2"><img
-                                src="../assets/images/svg/user.svg" alt=""><input class="w-100 h-100 userText" type="text"
-                                name="" id="d" placeholder="Insert username">
-                            </div>
-                                
-    
+                    <div
+                        class="d-flex flex-column justify-content-start align-items-center overflow-auto input-box-wrapper">
+                        <div class="w-100 d-flex justify-content-start align-items-center text-input mb-2"><img
+                                src="../assets/images/svg/user.svg" alt=""><input class="w-100 h-100 userText"
+                                type="text" name="" id="d" placeholder="Insert username">
+                        </div>
                         <div class="w-auto d-flex justify-content-center align-items-center add-button">
                             <div class="pe-2">Add</div><img src="../assets/images/svg/plus.svg" alt=""></button>
                         </div>
@@ -36,8 +38,6 @@
             </div>
             <div class="row">
                 <div class="col d-flex justify-content-between">
-                    <button type="button" class="log-out">Log Out</button>
-
                     <a class="mm-cta-small">About</a>
                     <a class="mm-cta-small">Privacy Poilcy</a>
                 </div>
@@ -56,7 +56,7 @@
             </div>
         </div>
         <button type="button" class="add-user-button">Add User</button>
-        
+
         <p id="artists"></p>
     </div>
     <script type="module" src="../js/main.js"></script>
