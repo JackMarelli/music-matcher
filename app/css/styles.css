@@ -8,10 +8,6 @@
   src: url(../assets/fonts/besley-variable.ttf);
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 :root {
   --primary: #fcf4f0;
   --secondary: #090909;
@@ -137,9 +133,27 @@ button {
   justify-content: start;
   align-items: center;
   margin: 0 0 0 1em;
-  padding: 0 0 0 1em;
+  padding: 0 0 0 1.4em;
   border: 1px solid black;
   border-radius: 999px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.questions-panel {
+  height: 100%;
+  width: 96vw;
+  overflow: scroll;
+}
+
+.input-box-wrapper {
+  height: 100%;
+  width: 96vw;
+  border: 1px solid red;
+}
+
+.input-box-wrapper > .box {
+  margin: 0 0 1em 0;
 }
 
 #fold img {

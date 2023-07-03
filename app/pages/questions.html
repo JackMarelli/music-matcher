@@ -11,7 +11,7 @@
 
 <body>
   <div class="main">
-    <div class="container py-3">
+    <div class="container vh-100 py-3 d-flex flex-column">
       <div class="row">
         <div class="col d-flex">
           <div class="question-number">1</div>
@@ -20,21 +20,21 @@
       </div>  
       <div class="row">
         <div class="col-12">
-          <h2 class="col-12 fs-3">Choose nationalities</h2>
+          <h2 class="col-12 fs-3 mt-3 mb-0">Choose nationalities</h2>
           <p class="col-12 fs-6">max. 2</p>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">* qeustions *</div>
+      <div class="row flex-grow-1">
+        <div class="col-12"><div class="questions-panel"><div class="input-box-wrapper mt-3 row row-cols-2 row-cols-sm-3"></div></div></div>
       </div>
       <div class="row">
-        <div class="col-12">
-          <div class="mm-btn mm-btn-fit">Next</div>
+        <div class="col-12 w-100">
+          <div class="mm-btn mm-btn-fit float-end">Next</div>
         </div>
       </div>
     </div>
   </div>
-  <div class="testing">
+  <div class="testing d-none">
     <div class="input-box-wrapper"></div>
     <button type="button" class="submit">Submit</button>
 
