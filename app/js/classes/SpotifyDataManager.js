@@ -1,3 +1,4 @@
+import { generateCodeVerifier, generateCodeChallenge } from "../utils.js";
 export default class SpotifyDataManager{
   #clientId = "5d488b4b52a34dfe8ef7a5db254489d2";
   #currentToken = null;
@@ -20,9 +21,9 @@ export default class SpotifyDataManager{
     if (this.#code && localStorage.length >= 1  ) {
       this.#currentUser = await this.changeToken();
       
-      return await this.#fetchProfile(this.#currentToken)
+      return await this.getProfile(this.#currentToken)
       .then(profile =>{
-        
+
         profile.token = this.#currentUser.token;
         profile.timeTokenCreation = this.#currentUser.timeTokenCreation;
         return profile;
@@ -43,8 +44,8 @@ export default class SpotifyDataManager{
   
 
   async #redirectToAuthCodeFlow(clientId) {
-    const verifier = this.#generateCodeVerifier(128);
-    const challenge = await this.#generateCodeChallenge(verifier);
+    const verifier = generateCodeVerifier(128);
+    const challenge = await generateCodeChallenge(verifier);
 
     localStorage.setItem("verifier", verifier);
     
@@ -58,25 +59,6 @@ export default class SpotifyDataManager{
 
     document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
   }
-
-  #generateCodeVerifier(length) {
-    let text = '';
-    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-    for (let i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-  }
-  async #generateCodeChallenge(codeVerifier) {
-    const data = new TextEncoder().encode(codeVerifier);
-    const digest = await window.crypto.subtle.digest('SHA-256', data);
-    return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-  }
-
 
   async #getAccessToken(clientId, code) {
     const verifier = localStorage.getItem("verifier");
@@ -99,23 +81,57 @@ export default class SpotifyDataManager{
     return access_token;
   }
 
-  async #fetchProfile(token) {
-    const result = await fetch("https://api.spotify.com/v1/me", {
-      method: "GET", 
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    return (await result.json());
-  }
-
-
- // inutilizzato da rendere universale
-  async #sendRequest(token, remoteURL, endPoint, method, body) {
-    const result = await fetch(`${remoteURL}${endPoint}`, {
+  async #fetchWebApi(token, endpoint, method, body) {
+    const result = await fetch(`https://api.spotify.com/${endpoint}`, {
       method: method, 
       headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify(body)
     });
     return (await result.json());
+  }
+
+  async getProfile(token) {
+    return await this.#fetchWebApi(token, "v1/me", 'GET');
+  }
+
+  async getPlaylist(token, genres, artists, tracks, limit){ 
+    //const seed_genres = genres.join(','); //DA SISTEMARE CONSIDERANDO TUTTE LE POSSIBILI CHIAMATE
+    const seed_artists = artists.join(',');
+    //const seed_tracks = tracks.join(',');
+    //${limit} // `v1/recommendations?limit10=&seed_artists=${seed_artists}&seed_genres=${seed_genres}&seed_tracks=${seed_tracks}`
+   
+    const result = await this.#fetchWebApi(token, `v1/recommendations?limit10=&seed_artists=${seed_artists}`, 'GET');
+    return await result.tracks; 
+  }
+
+  async getArtists(token , genres =[], countries = null){
+      
+      let filters = null;
+      if(countries)filters = genres.concat(countries)
+      else filters = genres;
+      const seeds = filters.join(',');
+      let result = await this.#fetchWebApi(token,`v1/search?q=%20genre:${seeds}&type=artist&limit=50&offset=3`, 'GET');
+
+      //soluzione provvisoria
+      console.log(await result.artists.items.length);
+      if (await result.artists.items.length< 5 && filters !== genres ){
+          return await this.getArtists(token, genres);
+      }
+      else return await result;
+  }
+  
+  async exportPlaylist(token, user_id, tracksUri, name){
+    
+    const playlist = await this.#fetchWebApi(token,
+      `v1/users/${user_id}/playlists`, 'POST', {
+      "name": `${name}`,
+      "description": "Playlist created by Albyeah",
+      "public": false
+    })
+    
+    await this.#fetchWebApi(token,`v1/playlists/${playlist.id}/tracks?uris=${tracksUri.join(',')}`,'POST');
+    
+    return playlist.id;
   }
 
 }
