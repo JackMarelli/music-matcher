@@ -358,7 +358,7 @@ _app.initializeQuiz = (host) => {
 };
 
 _app.createQuiz = (options) => {
-  _app.quizContainer = document.querySelector(".input-box-wrapper");
+  _app.quizContainer = qs(".input-box-wrapper");
   for (let option of options) {
     // let quizDiv = document.createElement("div");
     // quizDiv.className = "box";
@@ -380,6 +380,13 @@ _app.createQuiz = (options) => {
         `;
   }
 };
+
+_app.slideQuizSlider = () => {
+  _app.slider = qs("#questions-slider");
+  _app.questionsEls = qsa(".question");
+  console.log(_app.questionsEls);
+};
+
 _app.handleQuiz = (result) => {
   _app.quizPhaseCounter++;
   //console.log(_app.quizPhaseCounter);
@@ -389,6 +396,7 @@ _app.handleQuiz = (result) => {
   } else if (_app.quizPhaseCounter == 1) {
     _app.createQuiz(_app.quizOptions2);
     _app.quizResponse1 = result;
+    _app.slideQuizSlider();
   } else if (_app.quizPhaseCounter == 2) {
     _app.quizResponse2 = result;
     //console.log("FASE 2")
@@ -465,9 +473,13 @@ _app.detectPhase = () => {
   if (document.location.pathname.includes("end.html")) {
     if (localStorage.playlist) {
       qs(".redirect-playlist").addEventListener("click", function () {
-        window.location.replace(
-          `https://open.spotify.com/playlist/${_app.playlistID}`
-        );
+        window.open(
+          `https://open.spotify.com/playlist/${_app.playlistID}`,
+          "_blank"
+        ) ||
+          window.location.replace(
+            `https://open.spotify.com/playlist/${_app.playlistID}`
+          );
       });
     } else document.location = "/app/pages/login.html";
   }
@@ -541,13 +553,17 @@ _app.requestArtist = async (genres, countries) => {
   let artistsHTML = "";
   artists.artists.items.forEach((artist) => {
     const img = artist.images[2].url
-      ? `<img src=${artist.images[2].url}  alt="null" width="60" height="60"></img>`
+      ? `<img class="p-1" src=${artist.images[2].url}  alt="null" width="60" height="60"></img>`
       : "";
     artistsHTML += `
-        <div class="box">
-            <input type="checkbox" value=${artist.id} class="checkbox" id=${artist.id}>
-            <label for=>${artist.name} </label>
-            ${img}
+        <div class="col-12">
+          <div class="artist-box">
+            <div>
+              ${img}
+              <label class="mx-1" for=>${artist.name} </label>
+            </div>
+            <input type="checkbox" value=${artist.id} class="checkbox mx-3" id=${artist.id}>
+          </div>
         </div>
         `;
   });
@@ -609,6 +625,8 @@ _app.removeSong = (e) => {
 _app.exportPlaylist = async () => {
   _app.songs = [];
   const songs = qsa(".song-container");
+
+  //todo: eliminare duplicati con uniqueArray
   songs.forEach((e) => {
     _app.songs.push(`spotify:track:${e.id}`);
   });

@@ -146,14 +146,29 @@ button {
   overflow-x: scroll;
 }
 
-
 .input-box-wrapper {
-  width: 96vw;
-  border: 1px solid red;
+  max-height: 68vh;
+  margin-bottom: 12px;
+  overflow-x: scroll;
 }
 
 .input-box-wrapper > .box {
-  margin: 0 0 1em 0;
+  margin-bottom: 1em;
+}
+
+.artist-box {
+  border: 1px solid black;
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.artist-box img {
+  border-radius: 12px;
 }
 
 #fold img {

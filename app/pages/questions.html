@@ -10,41 +10,45 @@
 
   <body>
     <div class="main">
-      <div class="container vh-100 py-3 d-flex flex-column">
-        <div class="row">
-          <div class="col d-flex">
-            <div class="question-number">1</div>
-            <div class="flex-grow-1 active-username">Albyeah</div>
+      <div class="vh-100 py-3 d-flex flex-column">
+        <div class="container">
+          <div class="row">
+            <div class="col d-flex">
+              <div class="question-number">1</div>
+              <div class="flex-grow-1 active-username">Albyeah</div>
+            </div>
           </div>
         </div>
-        <div class="row flex-grow-1">
-          <div class="col questions-slider">
-            <div class="question col-12">
+        <div class="flex-grow-1">
+          <div id="#questions-slider" class="col questions-slider">
+            <div class="question col-12 container">
               <h2 class="col-12 fs-3 mt-3 mb-0">Choose nationalities</h2>
               <p class="col-12 fs-6">max. 2</p>
               <div
-                class="col-12 input-box-wrapper row row-cols-2 row-cols-sm-3 row-cols-md-4"
+                class="input-box-wrapper row row-cols-2 row-cols-sm-3 row-cols-md-4"
               ></div>
-            </div>    
-            <div class="question col-12 ">
+            </div>
+            <div class="question col-12 container">
               <h2 class="col-12 fs-3 mt-3 mb-0">What mood are you in?</h2>
               <p class="col-12 fs-6">max. 3</p>
               <div
                 class="col-12 input-box-wrapper row row-cols-2 row-cols-sm-3 row-cols-md-4"
               ></div>
             </div>
-            <div class="question col-12 ">
-              <h2 class="col-12 fs-3 mt-3 mb-0">Pick your favourite artists:</h2>
+            <div class="question col-12 container">
+              <h2 class="col-12 fs-3 mt-3 mb-0">
+                Pick your favourite artists:
+              </h2>
               <p class="col-12 fs-6">max. 3</p>
-              <div
-                class="col-12 input-box-wrapper row row-cols-2 row-cols-sm-3 row-cols-md-4"
-              ></div>
+              <div class="col-12 input-box-wrapper row"></div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-12 w-100">
-            <div class="mm-btn mm-btn-fit float-end submit">Next</div>
+        <div class="container">
+          <div class="row">
+            <div class="col-12 w-100">
+              <div class="mm-btn mm-btn-fit float-end submit">Next</div>
+            </div>
           </div>
         </div>
       </div>
@@ -53,7 +57,6 @@
       <div class="input-box-wrapper"></div>
       <button type="button" class="submit">Submit</button>
     </div>
-
     <script type="module" src="../js/main.js"></script>
   </body>
 </html>
