@@ -3,6 +3,7 @@ class User {
 	r1 = "";
 	r2 = "";
 	r3= "";
+	// todo: domande a vettore
 
 	constructor (username = "", r1 = "", r2 = "", r3= "") {
 		if (username) this.username = username;

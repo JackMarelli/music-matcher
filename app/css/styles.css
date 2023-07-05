@@ -140,19 +140,19 @@ button {
   text-overflow: ellipsis;
 }
 
-.questions-panel {
-  height: 100%;
-  width: 96vw;
-  overflow: scroll;
+.questions-slider {
+  display: flex;
+  flex-flow: row nowrap;
+  overflow-x: scroll;
 }
 
-.questions-panel > .input-box-wrapper {
-  height: 100%;
+
+.input-box-wrapper {
   width: 96vw;
   border: 1px solid red;
 }
 
-.questions-panel > .input-box-wrapper > .box {
+.input-box-wrapper > .box {
   margin: 0 0 1em 0;
 }
 
