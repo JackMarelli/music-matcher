@@ -355,31 +355,42 @@ _app.requestPlaylist = async (tracks) => {
     null,
     tracks
   );
-  _app.songsContainer = qs(".playlist-container");
+  _app.playlistContainer = qs(".playlist-container");
 
   recommendedTracks.forEach((e) => {
     let songDiv = document.createElement("div");
     songDiv.className = "song-container";
     songDiv.id = `${e.id}`;
-
-    let songTitle = document.createElement("p");
-    songTitle.innerHTML = `${e.name} by ${e.artists
+    
+    let titleDiv = document.createElement("div");
+    titleDiv.className = "title fs-5";
+    titleDiv.innerHTML = `${e.name}`;
+    titleDiv.id = `${e.id}`;
+    
+    let artistDiv = document.createElement("div");
+    artistDiv.className = "artists fs-6";
+    artistDiv.innerHTML = `${e.artists
       .map((artist) => artist.name)
       .join(", ")}`;
 
+    let textInfo = document.createElement("div");
+    textInfo.className = "info"
+    textInfo.appendChild(titleDiv);
+    textInfo.appendChild(artistDiv);
+
     let songImg = document.createElement("img");
-    songImg.src = `${e.album.images[1].url} `;
-    songImg.width = "60";
+    songImg.src = e.album.images[1].url;
 
     let deleteButton = document.createElement("button");
     deleteButton.type = "button";
     deleteButton.className = "remove-button";
-    deleteButton.innerHTML = "Remove";
+    deleteButton.innerHTML = "-";
 
     deleteButton.addEventListener("click", _app.removeSong);
-    _app.songsContainer.appendChild(songDiv);
-    songDiv.appendChild(songTitle);
+    _app.playlistContainer.appendChild(songDiv);
+
     songDiv.appendChild(songImg);
+    songDiv.appendChild(textInfo);
     songDiv.appendChild(deleteButton);
   });
 
@@ -388,7 +399,7 @@ _app.requestPlaylist = async (tracks) => {
   button.className = "export-playlist";
   button.innerHTML = "Save to Spotify";
   button.addEventListener("click", _app.exportPlaylist);
-  _app.songsContainer.appendChild(button);
+  _app.playlistContainer.appendChild(button);
 };
 _app.removeSong = (e) => {
   e.target.parentElement.remove();
