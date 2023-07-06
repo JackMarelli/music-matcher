@@ -2,10 +2,10 @@ function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function checkExpired(originalTime, currentTime, time) {
+function checkExpired(originalTime, currentTime, expirationTime) {
     let timeDiff = currentTime - originalTime;
     timeDiff /= 1000; 
-    if (timeDiff >= time) return false;
+    if (timeDiff >= expirationTime) return false;
     else return true;
 }
 
