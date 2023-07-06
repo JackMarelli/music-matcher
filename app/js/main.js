@@ -558,10 +558,8 @@ _app.requestArtist = async (genres, countries) => {
     artistsHTML += `
         <div class="col-12">
           <div class="artist-box">
-            <div>
               ${img}
               <label class="mx-1" for=>${artist.name} </label>
-            </div>
             <input type="checkbox" value=${artist.id} class="checkbox mx-3" id=${artist.id}>
           </div>
         </div>
