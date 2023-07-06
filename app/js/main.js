@@ -349,14 +349,10 @@ _app.initializePlaylist = () => {
   }
   _app.requestPlaylist(uniqueArray(responses3).slice(0, 5));
 };
-_app.requestPlaylist = async (tracks) => {
-  const recommendedTracks = await _app.sdm.getPlaylist(
-    _app.host.token,
-    null,
-    tracks
-  );
-  _app.playlistContainer = qs(".playlist-container");
+_app.requestPlaylist = async (artists) => {
+  const recommendedTracks = await _app.sdm.getPlaylist(_app.host.token,null, artists, _app.users);
 
+  _app.playlistContainer = qs(".playlist-container");
   recommendedTracks.forEach((e) => {
     let songDiv = document.createElement("div");
     songDiv.className = "song-container";
