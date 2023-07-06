@@ -1,25 +1,12 @@
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
-function lowercase(string) {
-    return string.charAt(0).toLowerCase() + string.slice(1);
-}
 
-function uniqueArray(arr){
-    let a = [];
-    for (let i=0, l= arr.length; i<l; i++)
-        if (a.indexOf(arr[i]) === -1 && arr[i] !== '')
-            a.push(arr[i]);
-    return a;
-}
-
-function generateCodeVerifier(length) {
-    let text = '';
-    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
+function checkExpired(originalTime, currentTime, time) {
+    let timeDiff = currentTime - originalTime;
+    timeDiff /= 1000; 
+    if (timeDiff >= time) return false;
+    else return true;
 }
 
 async function generateCodeChallenge(codeVerifier) {
@@ -31,6 +18,19 @@ async function generateCodeChallenge(codeVerifier) {
     .replace(/=+$/, '');
 }
 
+function generateCodeVerifier(length) {
+    let text = '';
+    let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
+
+function lowercase(string) {
+    return string.charAt(0).toLowerCase() + string.slice(1);
+}
+
 function qs (selector) {
 	return document.querySelector(selector);
 }
@@ -39,4 +39,12 @@ function qsa (selector) {
 	return document.querySelectorAll(selector);
 }
 
-export { qs, qsa , capitalize, lowercase, uniqueArray, generateCodeVerifier, generateCodeChallenge};
+function uniqueArray(arr){
+    let a = [];
+    for (let i=0, l= arr.length; i<l; i++)
+        if (a.indexOf(arr[i]) === -1 && arr[i] !== '')
+            a.push(arr[i]);
+    return a;
+}
+
+export { checkExpired, qs, qsa , capitalize, lowercase, uniqueArray, generateCodeVerifier, generateCodeChallenge};

@@ -1,4 +1,4 @@
-import { qs, qsa, capitalize, lowercase, uniqueArray } from "./utils.js";
+import { checkExpired, qs, qsa, capitalize, uniqueArray } from "./utils.js";
 import SpotifyDataManager from "./classes/SpotifyDataManager.js";
 import Host from "./classes/Host.js";
 
@@ -118,240 +118,9 @@ _app.initializeQuiz = (host) => {
   _app.userIndex = 0;
 
   qs(".active-username").innerHTML = _app.usersnames[0];
-  _app.quizOptions1 = [
-    "english",
-    "italian",
-    "spanish",
-    "german",
-    "greek",
-    "norwegian",
-    "russian",
-    "mandarin",
-    "romanian",
-    "french",
-    "danish",
-    "korean",
-    "japanese",
-    "portuguese",
-  ];
-  _app.quizOptions2x = [
-    "acoustic",
-    "afrobeat",
-    "alt-rock",
-    "alternative",
-    "ambient",
-    "anime",
-    "black-metal",
-    "bluegrass",
-    "blues",
-    "bossanova",
-    "brazil",
-    "breakbeat",
-    "british",
-    "cantopop",
-    "chicago-house",
-    "children",
-    "chill",
-    "classical",
-    "club",
-    "comedy",
-    "country",
-    "dance",
-    "dancehall",
-    "death-metal",
-    "deep-house",
-    "detroit-techno",
-    "disco",
-    "disney",
-    "drum-and-bass",
-    "dub",
-    "dubstep",
-    "edm",
-    "electro",
-    "electronic",
-    "emo",
-    "folk",
-    "forro",
-    "french",
-    "funk",
-    "garage",
-    "german",
-    "gospel",
-    "goth",
-    "grindcore",
-    "groove",
-    "grunge",
-    "guitar",
-    "happy",
-    "hard-rock",
-    "hardcore",
-    "hardstyle",
-    "heavy-metal",
-    "hip-hop",
-    "holidays",
-    "honky-tonk",
-    "house",
-    "idm",
-    "indian",
-    "indie",
-    "indie-pop",
-    "industrial",
-    "iranian",
-    "j-dance",
-    "j-idol",
-    "j-pop",
-    "j-rock",
-    "jazz",
-    "k-pop",
-    "kids",
-    "latin",
-    "latino",
-    "malay",
-    "mandopop",
-    "metal",
-    "metal-misc",
-    "metalcore",
-    "minimal-techno",
-    "movies",
-    "mpb",
-    "new-age",
-    "new-release",
-    "opera",
-    "pagode",
-    "party",
-    "philippines-opm",
-    "piano",
-    "pop",
-    "pop-film",
-    "post-dubstep",
-    "power-pop",
-    "progressive-house",
-    "psych-rock",
-    "punk",
-    "punk-rock",
-    "r-n-b",
-    "rainy-day",
-    "reggae",
-    "reggaeton",
-    "road-trip",
-    "rock",
-    "rock-n-roll",
-    "rockabilly",
-    "romance",
-    "sad",
-    "salsa",
-    "samba",
-    "sertanejo",
-    "show-tunes",
-    "singer-songwriter",
-    "ska",
-    "sleep",
-    "songwriter",
-    "soul",
-    "soundtracks",
-    "spanish",
-    "study",
-    "summer",
-    "swedish",
-    "synth-pop",
-    "tango",
-    "techno",
-    "trance",
-    "trip-hop",
-    "turkish",
-    "work-out",
-    "world-music",
-  ];
-  _app.quizOptions2 = [
-    "acoustic",
-    "afrobeat",
-    "alternative",
-    "black-metal",
-    "blues",
-    "bossanova",
-    "children",
-    "chill",
-    "classical",
-    "country",
-    "dance",
-    "dancehall",
-    "death-metal",
-    "disco",
-    "disney",
-    "drum-and-bass",
-    "dubstep",
-    "edm",
-    "electro",
-    "electronic",
-    "emo",
-    "folk",
-    "funk",
-    "garage",
-    "german",
-    "gospel",
-    "goth",
-    "groove",
-    "grunge",
-    "guitar",
-    "hard-rock",
-    "hardcore",
-    "hardstyle",
-    "heavy-metal",
-    "hip-hop",
-    "holidays",
-    "honky-tonk",
-    "house",
-    "idm",
-    "indian",
-    "indie",
-    "indie-pop",
-    "industrial",
-    "iranian",
-    "j-dance",
-    "j-idol",
-    "j-pop",
-    "j-rock",
-    "jazz",
-    "k-pop",
-    "kids",
-    "latin",
-    "latino",
-    "metal",
-    "minimal-techno",
-    "mpb",
-    "opera",
-    "party",
-    "piano",
-    "pop",
-    "post-dubstep",
-    "power-pop",
-    "progressive-house",
-    "psych-rock",
-    "punk",
-    "punk-rock",
-    "r-n-b",
-    "reggae",
-    "reggaeton",
-    "rock",
-    "rock-n-roll",
-    "rockabilly",
-    "romance",
-    "sad",
-    "salsa",
-    "samba",
-    "show-tunes",
-    "singer-songwriter",
-    "sleep",
-    "songwriter",
-    "soul",
-    "soundtracks",
-    "study",
-    "summer",
-    "synth-pop",
-    "tango",
-    "techno",
-    "work-out",
-  ];
+  _app.quizOptions1 = [ "english", "italian", "spanish", "german", "greek", "norwegian", "russian", "mandarin", "romanian", "french", "danish", "korean", "japanese", "portuguese"];
+  _app.quizOptions2x = [ "acoustic", "afrobeat", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "bossanova", "brazil", "breakbeat", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dancehall", "death-metal", "deep-house", "detroit-techno", "disco", "disney", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metal-misc", "metalcore", "minimal-techno", "movies", "mpb", "new-age", "new-release", "opera", "pagode", "party", "philippines-opm", "piano", "pop", "pop-film", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "rainy-day", "reggae", "reggaeton", "road-trip", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo", "show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "soundtracks", "spanish", "study", "summer", "swedish", "synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "work-out", "world-music",];
+  _app.quizOptions2 = [ "acoustic", "afrobeat", "alternative", "black-metal", "blues", "bossanova", "children", "chill", "classical", "country", "dance", "dancehall", "death-metal", "disco", "disney", "drum-and-bass", "dubstep", "edm", "electro", "electronic", "emo", "folk", "funk", "garage", "german", "gospel", "goth", "groove", "grunge", "guitar", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "holidays", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "metal", "minimal-techno", "mpb", "opera", "party", "piano", "pop", "post-dubstep", "power-pop", "progressive-house", "psych-rock", "punk", "punk-rock", "r-n-b", "reggae", "reggaeton", "rock", "rock-n-roll", "rockabilly", "romance", "sad", "salsa", "samba", "show-tunes", "singer-songwriter", "sleep", "songwriter", "soul", "soundtracks", "study", "summer", "synth-pop", "tango", "techno", "work-out",];
 
   qs(".submit").addEventListener("click", _app.registerQuizResponse);
   _app.createQuiz(_app.quizOptions1);
@@ -360,24 +129,24 @@ _app.initializeQuiz = (host) => {
 _app.createQuiz = (options) => {
   _app.quizContainer = qs(".input-box-wrapper");
   for (let option of options) {
-    // let quizDiv = document.createElement("div");
-    // quizDiv.className = "box";
+    let quizDiv = document.createElement("div");
+    quizDiv.className = "box";
+    
+    let inputQuiz = document.createElement("input");
+    inputQuiz.type =  "checkbox";
+    inputQuiz.className =  "checkbox";
+    inputQuiz.id = `${option}`;
+    inputQuiz.value = `${option}`;
 
-    // let inputQuiz = document.createElement("input");
-    // //inputUser.id =  _app.userNumber.toString();
-    // inputQuiz.type =  "checkbox";
-    // inputQuiz.className =  "checkbox";
-    // inputQuiz.id = `${option}`;
-    // inputQuiz.value = `${option}`;
+    let labelQuiz = document.createElement("label");
+    labelQuiz.htmlFor = `${option}`;
+    labelQuiz.innerHTML = `${capitalize(option)}`;
 
-    // quizDiv.appendChild(inputQuiz);
-    // _app.quizContainer.appendChild(quizDiv);
-    _app.quizContainer.innerHTML += `
-        <div class="box">
-            <input type="checkbox" value=${option} class="checkbox" id=${option}>
-            <label for=${option}>${capitalize(option)}</label>
-        </div>
-        `;
+    quizDiv.appendChild(inputQuiz);
+    quizDiv.appendChild(labelQuiz);
+    inputQuiz.addEventListener("click", _app.selectionLimitQuiz(1));
+
+    _app.quizContainer.appendChild(quizDiv);
   }
 };
 
@@ -389,9 +158,7 @@ _app.slideQuizSlider = () => {
 
 _app.handleQuiz = (result) => {
   _app.quizPhaseCounter++;
-  //console.log(_app.quizPhaseCounter);
   _app.quizContainer.innerHTML = "";
-  //console.log(_app.quizPhaseCounter);
   if (_app.quizPhaseCounter == 0) {
   } else if (_app.quizPhaseCounter == 1) {
     _app.createQuiz(_app.quizOptions2);
@@ -411,15 +178,14 @@ _app.handleQuiz = (result) => {
       r3: _app.quizResponse3,
     };
     _app.users.push(obj);
-
-    console.log("salvare user e passare al prossimo");
+    //console.log("salvare user e passare al prossimo");
     _app.userIndex++;
     _app.quizPhaseCounter = 0;
 
     if (!_app.usersnames[_app.userIndex]) {
       localStorage.setItem("users", JSON.stringify(_app.users));
       _app.quizContainer.innerHTML = "";
-      console.log("FINE QUIZ");
+      //console.log("FINE QUIZ");
       document.location = "/app/pages/result.html";
     } else {
       qs(".active-username").innerHTML = _app.usersnames[_app.userIndex];
@@ -432,7 +198,7 @@ _app.registerQuizResponse = () => {
   let checkboxes = document.querySelectorAll(".checkbox");
   let resultsArray = [];
   for (let checkbox of checkboxes) {
-    if (checkbox.checked == true) resultsArray.push(lowercase(checkbox.value));
+    if (checkbox.checked == true) resultsArray.push(checkbox.value);
     else resultsArray = resultsArray.filter((e) => e !== checkbox.value);
   }
   //console.log(resultsArray);
@@ -441,8 +207,14 @@ _app.registerQuizResponse = () => {
   }
 };
 
-_app.selectionLimitQuiz = () => {
-  console.log(this);
+_app.selectionLimitQuiz = (n) => {
+  let checks= document.querySelectorAll(".checkbox");
+  let max = 2;
+  for (let i = 0; i < checks.length; i++) checks[i].onclick = selectiveCheck;
+  function selectiveCheck () {
+    let checkedChecks = document.querySelectorAll(".checkbox:checked");
+    if (checkedChecks.length >= n + 1) return false;
+  }
 };
 
 //Funzioni principali e generali
@@ -490,7 +262,6 @@ _app.requestSpotifyAuth = () => {
 _app.initSpotifyData = () => {
   if (localStorage.host) {
     _app.loadLocalStorage();
-
     _app.displayUser(); // per mostrare icona spotify da riposizionare
   } else {
     _app.sdm.loadSpotifyHostData().then((profile) => {
@@ -526,11 +297,7 @@ _app.saveLocalData = () => {
 _app.loadLocalStorage = () => {
   if (localStorage.host) {
     const parsedHost = JSON.parse(localStorage.host);
-    const currentTime = Date.now(); //METTERE TUTTO IL CHECK NEGLI UTILS
-    let timeDiff = currentTime - parsedHost.timeTokenCreation;
-    timeDiff /= 1000; //trasforma i millisecondi in secondi
-    if (timeDiff >= 3590) {
-      //3600
+    if (!checkExpired(parsedHost.timeTokenCreation, Date.now(), 3590)){
       _app.clearLocalStorage();
       return;
     }
@@ -564,8 +331,14 @@ _app.requestArtist = async (genres, countries) => {
           </div>
         </div>
         `;
+
   });
   _app.quizContainer.innerHTML = artistsHTML;
+  
+  qsa(".checkbox").forEach(item => {
+    item.addEventListener('click', _app.selectionLimitQuiz(4));
+  })
+
 };
 
 //funzioni che creano e gesticono la playlist finale
