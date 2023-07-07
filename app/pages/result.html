@@ -1,44 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Music Matcher - Results</title>
-    <link rel="icon" type="image/x-icon" href="../assets/images/svg/favicon.svg">
-    <link rel="stylesheet" href="../css/bootstrap.css">
-    <link rel="stylesheet" href="../css/styles.css">
-</head>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../assets/images/svg/favicon.svg"
+    />
+    <link rel="stylesheet" href="../css/bootstrap.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
 
-<body>
-    <div class="main">
-        <div class="container vh-100 d-flex flex-column mt-5">
-            <div class="row">
-                <h2 class="col-12 fs-3 mt-3 mb-0">Your playlist is ready!</h2>
-                <p class="col-12 fs-6 pt-1">You can edit before dowloading</p>
-            </div>
-            <div class="row flex-grow-1">
-                <div class="col">
-                    <div class="playlist-container"></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="w-100 d-flex justify-content-start align-items-center text-input mb-2"><img
-                        src="../assets/images/svg/user.svg" alt=""><input class="w-100 h-100 playlist-name"
-                        type="text" name="" id="d" placeholder="Insert playlist name">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col"></div>
-            </div>
+  <body>
+    <div class="main position-relative">
+      <div class="container vh-100 d-flex flex-column py-5">
+        <div class="row">
+          <h2 class="col-12 fs-3 mt-3 mb-0">Your playlist is ready!</h2>
+          <p class="col-12 fs-6 pt-1">You can edit before dowloading</p>
         </div>
-    </div>
-    <div class="testing"></div>
+        <div class="row flex-grow-1">
+          <div class="col">
+            <div class="playlist-container"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div
+              class="w-100 d-flex justify-content-start align-items-center text-input mt-3 mb-2"
+            >
+              <img src="../assets/images/svg/user.svg" alt="" /><input
+                class="w-100 h-100 playlist-name"
+                type="text"
+                name=""
+                id="playlistNameInputField"
+                placeholder="Insert playlist name"
+              />
+            </div>
+            <div class="row">
+              <div class="col-12 d-flex justify-content-end">
+                <button
+                  id="saveToSpotify"
+                  type="button"
+                  class="mm-btn mm-btn-fit"
+                >
+                  Export
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="confirmUnnamedPlaylist" class="mm-popup">
+        <div class="container mm-popup-content">
+          <div class="row">
+            <div class="col-10">
+              <p class="fs-5">Save playlist without a custom name?</p>
+            </div>
+            <div class="col-2">
+              <img
+                class="close-icon"
+                src="../assets/images/svg/plus.svg"
+                alt=""
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button id="confirmExport" type="button" class="mm-btn">
+                Yup
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <script src="../js/main.js" type="module"></script>
-
-</body>
-
+  </body>
 </html>

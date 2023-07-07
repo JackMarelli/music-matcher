@@ -360,23 +360,30 @@ _app.requestPlaylist = async (artists) => {
     songDiv.appendChild(deleteButton);
   });
 
-  //PER CREARE IL BOTTONE (DOVREBBE GIA ESSERE NEL HTML)
-  const button = document.createElement("button");
-  button.className = "export-playlist";
-  button.innerHTML = "Save to Spotify";
-  button.addEventListener("click", _app.exportPlaylist);
-  _app.playlistContainer.appendChild(button);
+  const btnSaveToSpotify = qs("#saveToSpotify");
+  if (btnSaveToSpotify) {
+    btnSaveToSpotify.addEventListener("click", () => {
+      _app.playlistName = qs("#playlistNameInputField").value.trim();
+      if (_app.playlistName === "") {
+        const popup = qs("#confirmUnnamedPlaylist");
+        popup.classList.add("mm-popup-active");
+        qs("#confirmExport").addEventListener("click", () => {
+          _app.exportPlaylist();
+        });
+        qs(".close-icon").addEventListener("click", () => {
+          popup.classList.remove("mm-popup-active");
+        });
+      } else {
+        _app.playlistName = "Playlist by Music Matcher"
+        _app.exportPlaylist();
+      }
+    });
+  }
 };
 _app.removeSong = (e) => {
   e.target.parentElement.remove();
 };
 _app.exportPlaylist = async () => {
-  let playlist = qs(".playlist-name").value.trim();
-  if(playlist === ""){
-    alert("Devi inserire il nome della Playlist!");
-    return;
-  }
-  
   _app.songs = [];
   const songs = qsa(".song-container");
 
@@ -384,11 +391,12 @@ _app.exportPlaylist = async () => {
   songs.forEach((e) => {
     _app.songs.push(`spotify:track:${e.id}`);
   });
+
   _app.playlistID = await _app.sdm.exportPlaylist(
     _app.host.token,
     _app.host.id,
     _app.songs,
-    "Playlist by Music Matcher"
+    _app.playlistName
   );
   localStorage.setItem("playlist", await _app.playlistID);
   document.location = "/app/pages/end.html";
