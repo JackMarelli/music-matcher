@@ -1,5 +1,5 @@
 import { capitalize, checkExpired, qs, qsa, uniqueArray } from "./utils.js";
-import { showTurnLoader } from "./animations.js";
+import { showTurnLoader, waitingDots } from "./animations.js";
 import SpotifyDataManager from "./classes/SpotifyDataManager.js";
 import Host from "./classes/Host.js";
 
@@ -66,17 +66,22 @@ _app.removeUser = (e) => {
 _app.getAndSaveUsername = () => {
   if (localStorage.host) {
     let usernameArray = [];
-    let incomplete = false;
+    let incompleteArray = [];
     const usersArray = qsa(".userText");
     usersArray.forEach((user) => {
       if (user.value === "") {
-        incomplete = true;
+        incompleteArray.push(user);
       } else {
         usernameArray.push(user.value);
       }
     });
 
-    if (!incomplete) {
+    if (incompleteArray.length > 0) {
+      incompleteArray.forEach((e) => {
+        e.parentElement.classList.add("username-error");
+      });
+    }
+    else {
       localStorage.usersnames = JSON.stringify(usernameArray);
       _app.startQuiz(usernameArray);
     }
@@ -489,7 +494,7 @@ _app.initSpotifyData = () => {
   }
 };
 _app.displayUser = () => {
-  if (_app.host.img && document.location.pathname.includes("setup.html")) {
+  if (_app.host && document.location.pathname.includes("setup.html")) {
     const profileImage = new Image(50, 50);
     profileImage.src = _app.host.img;
     document.getElementById("avatar").appendChild(profileImage);
@@ -559,7 +564,8 @@ _app.initializePlaylist = () => {
 };
 _app.requestPlaylist = async (artists) => {
   _app.playlistContainer = qs(".playlist-container");
-  _app.playlistContainer.innerHTML = "<div>working for you...</div>";
+  _app.playlistContainer.innerHTML = `<div class="waiting">waiting</div>`;
+  waitingDots();
   const recommendedTracks = await _app.sdm.getPlaylist(
     _app.host.token,
     null,

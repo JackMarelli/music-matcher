@@ -66,11 +66,11 @@ button {
   padding: 10px 8px 10px 16px;
 }
 
-.text-input .error {
+.username-error {
   border: 1.5px solid rgb(238, 49, 49);
 }
 
-.text-input .error > input {
+.username-error > input::placeholder {
   color: rgb(238, 49, 49);
 }
 

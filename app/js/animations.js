@@ -1,4 +1,4 @@
-import { qs, qsa } from "./utils.js";
+import { qs, qsa} from "./utils.js";
 
 export function showTurnLoader(username) {
   console.log("turn loader");
@@ -36,4 +36,19 @@ function unfade(element) {
     element.style.filter = "alpha(opacity=" + op * 100 + ")";
     op += op * 0.1;
   }, 10);
+}
+
+
+export function waitingDots() {
+  let dots = window.setInterval( function() {
+    let wait = qs(".waiting");
+    if (!wait) {
+      clearInterval(dots);
+      return;
+    }
+    if ( wait.innerHTML.length > 9 ) 
+        wait.innerHTML = "waiting";
+    else 
+        wait.innerHTML += ".";
+    }, 200);
 }
