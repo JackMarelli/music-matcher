@@ -7232,11 +7232,12 @@ textarea.form-control-lg {
 }
 
 .fs-5 {
-  font-size: .95rem !important;
+  font-size: .9rem !important;
 }
 
 .fs-6 {
-  font-size: 0.8rem !important;
+  font-size: 10px !important;
+  color: #848484;
 }
 
 .fst-italic {
