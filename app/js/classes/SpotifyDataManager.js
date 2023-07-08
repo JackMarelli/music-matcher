@@ -92,7 +92,7 @@ export default class SpotifyDataManager{
     let limit = Math.round(49/users.length);
     //const seed_genres = genres.join(','); //DA SISTEMARE 
     const seed_artists = artists.join(',');
-
+  
     return await this.#fetchEveryUserResponses(users, limit, token); //per tornare alla vecchia generazione commentare questa riga
 
     const result = await this.#fetchWebApi(token, `v1/recommendations?limit=${limit}&seed_artists=${seed_artists}`, 'GET');

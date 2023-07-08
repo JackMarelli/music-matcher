@@ -1,4 +1,4 @@
-import { capitalize, checkExpired, qs, qsa, uniqueArray } from "./utils.js";
+import { capitalize, checkExpired, qs, qsa, uniqueArray, pathIncludes } from "./utils.js";
 import { showTurnLoader, waitingDots } from "./animations.js";
 import SpotifyDataManager from "./classes/SpotifyDataManager.js";
 import Host from "./classes/Host.js";
@@ -13,7 +13,7 @@ _app.startUp = () => {
   _app.quizPhaseCounter = 0;
 
   //only in Login page
-  if (document.location.pathname.includes("spotifylogin.html")) {
+  if (pathIncludes("spotifylogin.html")) {
     qs(".buttonToken").addEventListener("click", _app.requestSpotifyAuth);
     _app.inputLogin = qs("#username");
   }
@@ -92,7 +92,7 @@ _app.startQuiz = () => {
 };
 _app.setupUsers = (hostUsername = "") => {
   //only in setup page
-  if (document.location.pathname.includes("setup.html")) {
+  if (pathIncludes("setup.html")) {
     qs(".log-out").addEventListener("click", _app.clearLocalStorage);
     qs("#d").value = hostUsername;
     const startQuizButton = qs(".start-quiz");
@@ -361,19 +361,15 @@ _app.createQuiz = (options) => {
     _app.quizContainer.appendChild(quizDiv);
   }
 };
-_app.slideQuizSlider = () => {
-  _app.slider = qs("#questions-slider");
-  _app.questionsEls = qsa(".question");
-};
+
 _app.handleQuiz = (result) => {
   _app.quizPhaseCounter++;
   _app.quizContainer.innerHTML = "";
-  if (_app.quizPhaseCounter == 0) {
-  } else if (_app.quizPhaseCounter == 1) {
+
+  if (_app.quizPhaseCounter == 1) {
+    _app.quizResponse1 = result;
     _app.setQuizTitles("What mood are you in?", 1);
     _app.createQuiz(_app.quizOptions2);
-    _app.quizResponse1 = result;
-    _app.slideQuizSlider();
   } else if (_app.quizPhaseCounter == 2) {
     _app.quizResponse2 = result;
     _app.setQuizTitles("Pick your favorite artists:", 4);
@@ -393,14 +389,10 @@ _app.handleQuiz = (result) => {
 
     if (!_app.usersnames[_app.userIndex]) {
       localStorage.users = JSON.stringify(_app.users);
-      //localStorage.setItem("users", JSON.stringify(_app.users));
       document.location = "/app/pages/result.html";
     } else {
-      qs(".active-username").innerHTML = _app.usersnames[_app.userIndex];
-
-      //new turn animation
       showTurnLoader(_app.usersnames[_app.userIndex]);
-
+      qs(".active-username").innerHTML = _app.usersnames[_app.userIndex];
       _app.createQuiz(_app.quizOptions1);
     }
   }
@@ -435,9 +427,9 @@ _app.selectionLimitQuiz = (n) => {
 //Funzioni principali e generali
 _app.detectPhase = () => {
   if (
-     document.location.pathname.includes("pages") &&
+    pathIncludes("pages") &&
     !localStorage.host &&
-    !document.location.pathname.includes("spotifylogin")
+    !pathIncludes("spotifylogin")
   ) {
     let err = "";
     let params = new URLSearchParams(window.location.search);
@@ -445,22 +437,16 @@ _app.detectPhase = () => {
     document.location = "/app/pages/spotifylogin.html" + err;
   }
 
-  if (
-    document.location.pathname.includes("spotifylogin.html") &&
-    localStorage.host
-  ) {
+  if (pathIncludes("spotifylogin.html") && localStorage.host) {
     document.location = "/app/pages/setup.html";
-  } else if (document.location.pathname.includes("setup.html") && _app.host) {
+  } else if (pathIncludes("setup.html") && _app.host) {
     _app.setupUsers(_app.host.username);
-  } else if (
-    document.location.pathname.includes("questions.html") &&
-    _app.host
-  ) {
+  } else if (pathIncludes("questions.html") &&_app.host) {
     _app.initializeQuiz(_app.host);
-  } else if (document.location.pathname.includes("result.html")) {
+  } else if (pathIncludes("result.html")) {
     if (localStorage.users) _app.initializePlaylist();
     else document.location = "/app/pages/spotifylogin.html";
-  } else if (document.location.pathname.includes("end.html")) {
+  } else if (pathIncludes("end.html")) {
     if (localStorage.playlist) {
       qs(".redirect-playlist").addEventListener("click", function () {
         window.open(
@@ -499,7 +485,7 @@ _app.initSpotifyData = () => {
   }
 };
 _app.displayUser = () => {
-  if (_app.host && document.location.pathname.includes("setup.html")) {
+  if (_app.host && pathIncludes("setup.html")) {
     const profileImage = new Image(50, 50);
     profileImage.src = _app.host.img;
     document.getElementById("avatar").appendChild(profileImage);
@@ -525,7 +511,7 @@ _app.loadLocalStorage = () => {
     _app.usersnames = JSON.parse(localStorage.usersnames);
   }
   if (localStorage.users) {
-    if (document.location.pathname.includes("questions.html"))
+    if (pathIncludes("questions.html"))
       localStorage.removeItem("users");
     else _app.users = JSON.parse(localStorage.users);
   }

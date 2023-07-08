@@ -31,6 +31,10 @@ function lowercase(string) {
     return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
+function pathIncludes(str) {
+    return document.location.pathname.includes(str);
+}
+
 function qs (selector) {
 	return document.querySelector(selector);
 }
@@ -47,4 +51,4 @@ function uniqueArray(arr){
     return a;
 }
 
-export { checkExpired, qs, qsa , capitalize, lowercase, uniqueArray, generateCodeVerifier, generateCodeChallenge};
+export { checkExpired, qs, qsa , capitalize, lowercase, pathIncludes, uniqueArray, generateCodeVerifier, generateCodeChallenge};

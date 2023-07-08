@@ -1,7 +1,6 @@
 import { qs, qsa} from "./utils.js";
 
 export function showTurnLoader(username) {
-  console.log("turn loader");
   const turnLoader = qs("#turnLoader");
   const turnUsername = qs("#turnUsername")
   turnUsername.innerHTML = `${username}'s`

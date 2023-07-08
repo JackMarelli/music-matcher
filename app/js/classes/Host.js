@@ -5,7 +5,6 @@ class Host {
     token = "";
 
 	constructor (id= "", username = "", img = "", token = "", timeTokenCreation = null) {
-		// console.log("New Host constructed!");
 		if (id) this.id = id;
 		if (username) this.username = username;
         if (img) this.img = img;
