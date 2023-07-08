@@ -80,8 +80,7 @@ _app.getAndSaveUsername = () => {
       incompleteArray.forEach((e) => {
         e.parentElement.classList.add("username-error");
       });
-    }
-    else {
+    } else {
       localStorage.usersnames = JSON.stringify(usernameArray);
       _app.startQuiz(usernameArray);
     }
@@ -371,15 +370,15 @@ _app.handleQuiz = (result) => {
   _app.quizContainer.innerHTML = "";
   if (_app.quizPhaseCounter == 0) {
   } else if (_app.quizPhaseCounter == 1) {
+    _app.setQuizTitles("What mood are you in?", 1);
     _app.createQuiz(_app.quizOptions2);
     _app.quizResponse1 = result;
     _app.slideQuizSlider();
   } else if (_app.quizPhaseCounter == 2) {
     _app.quizResponse2 = result;
-    //console.log("FASE 2")
+    _app.setQuizTitles("Pick your favorite artists:", 4);
     _app.requestArtist(_app.quizResponse2, _app.quizResponse1);
   } else if (_app.quizPhaseCounter == 3) {
-    //console.log("FASE 3")
     _app.quizResponse3 = result;
     const obj = {
       username: _app.usersnames[_app.userIndex],
@@ -418,6 +417,12 @@ _app.registerQuizResponse = () => {
     _app.handleQuiz(resultsArray);
   }
 };
+_app.setQuizTitles= (title = "", n = 1) => {
+  const quizTitle = qs(".quiz-title");
+  const maxTitle = qs(".quiz-title-max");
+  if(quizTitle) quizTitle.innerHTML = title;
+  if(maxTitle) maxTitle.innerHTML = `max. ${n}`;
+}
 _app.selectionLimitQuiz = (n) => {
   let checks = qsa(".checkbox");
   for (let i = 0; i < checks.length; i++) checks[i].onclick = selectiveCheck;
@@ -430,7 +435,7 @@ _app.selectionLimitQuiz = (n) => {
 //Funzioni principali e generali
 _app.detectPhase = () => {
   if (
-    document.location.pathname.includes("pages") &&
+     document.location.pathname.includes("pages") &&
     !localStorage.host &&
     !document.location.pathname.includes("spotifylogin")
   ) {
