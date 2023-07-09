@@ -1,7 +1,16 @@
-import { capitalize, checkExpired, qs, qsa, uniqueArray, pathIncludes } from "./utils.js";
+import {
+  capitalize,
+  checkExpired,
+  qs,
+  qsa,
+  uniqueArray,
+  pathIncludes,
+} from "./utils.js";
 import { showTurnLoader, waitingDots } from "./animations.js";
 import SpotifyDataManager from "./classes/SpotifyDataManager.js";
 import Host from "./classes/Host.js";
+import Playlist from "./classes/Playlist.js";
+import Song from "./classes/Song.js";
 
 const _app = {};
 _app.startUp = () => {
@@ -409,12 +418,12 @@ _app.registerQuizResponse = () => {
     _app.handleQuiz(resultsArray);
   }
 };
-_app.setQuizTitles= (title = "", n = 1) => {
+_app.setQuizTitles = (title = "", n = 1) => {
   const quizTitle = qs(".quiz-title");
   const maxTitle = qs(".quiz-title-max");
-  if(quizTitle) quizTitle.innerHTML = title;
-  if(maxTitle) maxTitle.innerHTML = `max. ${n}`;
-}
+  if (quizTitle) quizTitle.innerHTML = title;
+  if (maxTitle) maxTitle.innerHTML = `max. ${n}`;
+};
 _app.selectionLimitQuiz = (n) => {
   let checks = qsa(".checkbox");
   for (let i = 0; i < checks.length; i++) checks[i].onclick = selectiveCheck;
@@ -441,7 +450,7 @@ _app.detectPhase = () => {
     document.location = "/app/pages/setup.html";
   } else if (pathIncludes("setup.html") && _app.host) {
     _app.setupUsers(_app.host.username);
-  } else if (pathIncludes("questions.html") &&_app.host) {
+  } else if (pathIncludes("questions.html") && _app.host) {
     _app.initializeQuiz(_app.host);
   } else if (pathIncludes("result.html")) {
     if (localStorage.users) _app.initializePlaylist();
@@ -484,20 +493,24 @@ _app.initSpotifyData = () => {
     });
   }
 };
+
 _app.displayUser = () => {
   if (_app.host && pathIncludes("setup.html")) {
     const profileImage = new Image(50, 50);
     profileImage.src = _app.host.img;
-    document.getElementById("avatar").appendChild(profileImage);
+    qs("#avatar").appendChild(profileImage);
   }
 };
+
 _app.clearLocalStorage = () => {
   localStorage.clear();
   document.location = "/app/pages/spotifylogin.html";
 };
+
 _app.saveLocalData = () => {
   localStorage.host = JSON.stringify(_app.host);
 };
+
 _app.loadLocalStorage = () => {
   if (localStorage.host) {
     const parsedHost = JSON.parse(localStorage.host);
@@ -511,8 +524,7 @@ _app.loadLocalStorage = () => {
     _app.usersnames = JSON.parse(localStorage.usersnames);
   }
   if (localStorage.users) {
-    if (pathIncludes("questions.html"))
-      localStorage.removeItem("users");
+    if (pathIncludes("questions.html")) localStorage.removeItem("users");
     else _app.users = JSON.parse(localStorage.users);
   }
   if (localStorage.playlist) {
@@ -553,33 +565,44 @@ _app.initializePlaylist = () => {
   }
   _app.requestPlaylist(uniqueArray(responses3).slice(0, 5));
 };
+
 _app.requestPlaylist = async (artists) => {
   _app.playlistContainer = qs(".playlist-container");
   _app.playlistContainer.innerHTML = `<div class="waiting">waiting</div>`;
   waitingDots();
-  const recommendedTracks = await _app.sdm.getPlaylist(
-    _app.host.token,
-    null,
-    artists,
-    _app.users
-  );
+
+  if (!_app.playlist) {
+    const recommendedTracks = await _app.sdm.getPlaylist(
+      _app.host.token,
+      null,
+      artists,
+      _app.users
+    );
+    _app.playlist = new Playlist();
+    recommendedTracks.forEach((track) => {
+      const s = new Song(track.id, track.album.images[1].url, track.name);
+      track.artists.forEach((a) => {
+        s.artists.push(a.name);
+      });
+      _app.playlist.addSong(s);
+    });
+    _app.playlist.saveToLocalStorage();
+  }
 
   _app.playlistContainer.innerHTML = "";
-  recommendedTracks.forEach((e) => {
+  _app.playlist.songs.forEach((song) => {
     let songDiv = document.createElement("div");
     songDiv.className = "song-container";
-    songDiv.id = `${e.id}`;
+    songDiv.id = `${song.id}`;
 
     let titleDiv = document.createElement("div");
     titleDiv.className = "title fs-5";
-    titleDiv.innerHTML = `${e.name}`;
-    titleDiv.id = `${e.id}`;
+    titleDiv.innerHTML = `${song.name}`;
+    titleDiv.id = `${song.id}`;
 
     let artistDiv = document.createElement("div");
     artistDiv.className = "artists fs-6";
-    artistDiv.innerHTML = `${e.artists
-      .map((artist) => artist.name)
-      .join(", ")}`;
+    artistDiv.innerHTML = `${song.artists.join(", ")}`;
 
     let textInfo = document.createElement("div");
     textInfo.className = "info";
@@ -587,10 +610,10 @@ _app.requestPlaylist = async (artists) => {
     textInfo.appendChild(artistDiv);
 
     let songImg = document.createElement("img");
-    songImg.src = e.album.images[1].url;
+    songImg.src = song.img;
 
     let deleteButton = document.createElement("img");
-    deleteButton.className = "remove-button";
+    deleteButton.className = "remove-button cursor-pointer";
     deleteButton.src = "../assets/images/svg/remove-song.svg";
 
     deleteButton.addEventListener("click", _app.removeSong);
@@ -623,20 +646,20 @@ _app.requestPlaylist = async (artists) => {
 };
 _app.removeSong = (e) => {
   e.target.parentElement.remove();
+  _app.playlist.removeSong(e.target.parentElement.id);
 };
-_app.exportPlaylist = async () => {
-  _app.songs = [];
-  const songs = qsa(".song-container");
 
-  //todo: eliminare duplicati con uniqueArray
-  songs.forEach((e) => {
-    _app.songs.push(`spotify:track:${e.id}`);
+_app.exportPlaylist = async () => {
+  _app.ids = [];
+
+  _app.playlist.songs.forEach((s) => {
+    _app.ids.push(`spotify:track:${s.id}`);
   });
 
   _app.playlistID = await _app.sdm.exportPlaylist(
     _app.host.token,
     _app.host.id,
-    _app.songs,
+    _app.ids,
     _app.playlistName
   );
   localStorage.setItem("playlist", await _app.playlistID);

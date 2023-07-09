@@ -36,7 +36,8 @@ a:visited {
 
 a,
 .mm-btn,
-.mm-cta-small {
+.mm-cta-small,
+.cursor-pointer {
   cursor: pointer;
 }
 
