@@ -51,4 +51,4 @@ function uniqueArray(arr){
     return a;
 }
 
-export { checkExpired, qs, qsa , capitalize, lowercase, pathIncludes, uniqueArray, generateCodeVerifier, generateCodeChallenge};
+export { capitalize, checkExpired, generateCodeChallenge, generateCodeVerifier, lowercase, pathIncludes, qs, qsa, uniqueArray };

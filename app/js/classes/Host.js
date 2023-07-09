@@ -5,9 +5,9 @@ class Host {
     token = "";
 
 	constructor (id= "", username = "", img = "", token = "", timeTokenCreation = null) {
-		if (id) this.id = id;
-		if (username) this.username = username;
-        if (img) this.img = img;
+		this.id = id;
+		this.username = username;
+        this.img = img;
 		if (token) this.token = token;
         if (timeTokenCreation) this.timeTokenCreation = timeTokenCreation;
 	}

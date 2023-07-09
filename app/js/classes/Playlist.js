@@ -1,8 +1,24 @@
 export default class Playlist {
   songs;
+  url;
 
   constructor() {
     this.songs = [];
+    this.url = "";
+  }
+
+  addSong(song) {
+    this.songs.push(song);
+  }
+
+  addSongAndSaveLocal() {
+    this.songs.push(song);
+    this.saveToLocalStorage();
+  }
+
+  cleanFromLocalStorage() {
+    localStorage.removeItem("playlist");
+    return this.songs;
   }
 
   getSong(id) {
@@ -16,21 +32,7 @@ export default class Playlist {
     this.saveToLocalStorage();
   }
 
-  addSong(song) {
-    this.songs.push(song);
-  }
-
-  addSongAndSaveLocal() {
-    this.songs.push(song);
-    this.saveToLocalStorage();
-  }
-
   saveToLocalStorage() {
     localStorage.playlist = JSON.stringify(this);
-  }
-
-  cleanFromLocalStorage() {
-    localStorage.removeItem("playlist");
-    return this.songs;
   }
 }
