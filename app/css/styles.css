@@ -302,6 +302,26 @@ button {
   word-wrap: break-word;
 }
 
+.slideIn {
+  position: absolute;
+  height: fit-content;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  transform: translateY(130%);
+  background-color: var(--primary);
+  transition: all 420ms ease-out;
+}
+
+.active {
+  transform: translateY(0%);
+  transition: all 420ms ease-out;
+}
+
 @media (min-width: 768px) {
   .besley {
     font-size: 86px;
