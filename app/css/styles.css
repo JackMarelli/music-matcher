@@ -283,6 +283,7 @@ button {
   width: 100%;
   padding-top: 5vh;
   background-color: var(--primary);
+  z-index: 99;
 }
 
 #turnLoader .circle {

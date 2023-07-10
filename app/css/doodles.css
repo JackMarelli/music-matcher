@@ -1,0 +1,106 @@
+#startCreating,
+#conncectMain,
+#setupMain,
+#startSurvey,
+#quizTitle,
+#nextQuestion,
+#saveToSpotify,
+#playlistReady,
+#endMain {
+  position: relative;
+}
+
+/* index */
+#startCreating::after {
+  content: url(../assets/images/svg/doodles/double_star.svg);
+
+  position: absolute;
+  top: -15px;
+  right: -60px;
+}
+
+/* setup */
+#connectMain::before {
+  content: url(../assets/images/svg/doodles/lightbulb.svg);
+
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#setupMain::before {
+  content: url(../assets/images/svg/doodles/mail_with_hearts.svg);
+
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#startSurvey::before {
+  content: url(../assets/images/svg/doodles/double_heart.svg);
+
+  position: absolute;
+  top: -40px;
+  left: 20px;
+}
+
+/* questions */
+#quizTitle::after {
+  content: url(../assets/images/svg/doodles/spiraling_arrow.svg);
+
+  position: absolute;
+  top: 10px;
+  right: 0;
+}
+
+#nextQuestion::before {
+  content: url(../assets/images/svg/doodles/zigzag.svg);
+
+  position: absolute;
+  top: -20px;
+  left: -30px;
+}
+
+/* result */
+#saveToSpotify::before {
+  content: url(../assets/images/svg/doodles/saturn.svg);
+
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -60px;
+}
+
+#playlistReady::before {
+  content: url(../assets/images/svg/doodles/dottedline.svg);
+
+  position: absolute;
+  top: -65px;
+  left: 0px;
+}
+
+#playlistReady::after {
+  content: url(../assets/images/svg/doodles/gem.svg);
+
+  position: absolute;
+  top: 0;
+  right: 30px;
+}
+
+#endMain::before {
+  content: url(../assets/images/svg/doodles/partyflags_left.svg);
+
+  position: absolute;
+  top: -20px;
+  left: -20px;
+}
+
+#endMain::after {
+  content: url(../assets/images/svg/doodles/partyflags_right.svg);
+
+  position: absolute;
+  top: 0;
+  right: 0;
+}

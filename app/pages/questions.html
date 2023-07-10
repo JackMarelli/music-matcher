@@ -11,10 +11,11 @@
     />
     <link rel="stylesheet" href="../css/bootstrap.css" />
     <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/doodles.css" />
   </head>
 
   <body>
-    <div class="container-fluid pt-5" id="turnLoader">
+    <div class="container-fluid pt-3" id="turnLoader">
       <div class="row">
         <div class="col">
           <div class="circle m-auto">
@@ -25,7 +26,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col"><p class="text-center pt-5">Pass this device to him.</p></div>
+        <div class="col"><p class="text-center pt-3">Pass this device to him.</p></div>
+      </div>
+      <div class="row ">
+        <div class="col-12 d-flex justify-content-center"><img class="h-100" src="../assets/images/svg/doodles/spiraling_bow_arrow.svg" alt=""></div>
       </div>
     </div>
     <div class="main">
@@ -41,7 +45,7 @@
         <div class="flex-grow-1">
           <div id="#questions-slider" class="col questions-slider">
             <div class="question col-12 container">
-              <h2 class="col-12 fs-3 mt-3 mb-0 quiz-title">Choose nationalities</h2>
+              <h2 id="quizTitle" class="col-12 fs-4 mt-3 mb-0 quiz-title">Choose nationalities</h2>
               <p class="col-12 fs-5 quiz-title-max">max. 1</p>
               <div
                 class="input-box-wrapper row row-cols-2 row-cols-sm-3 row-cols-md-4"
@@ -52,7 +56,7 @@
         <div class="container">
           <div class="row">
             <div class="col-12 w-100">
-              <div class="mm-btn mm-btn-fit float-end submit">Next</div>
+              <div id="nextQuestion" class="mm-btn mm-btn-fit float-end submit">Next</div>
             </div>
           </div>
         </div>
