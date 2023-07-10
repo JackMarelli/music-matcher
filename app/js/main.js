@@ -427,7 +427,6 @@ _app.requestPlaylist = async (artists) => {
   if (!_app.playlist) {
     const recommendedTracks = await _app.sdm.getPlaylist(
       _app.host.token,
-      artists,
       _app.users
     );
     _app.playlist = new Playlist();

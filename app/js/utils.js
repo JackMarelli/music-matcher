@@ -43,6 +43,17 @@ function qsa (selector) {
 	return document.querySelectorAll(selector);
 }
 
+function shuffleArray(arr) {
+    let currentIndex = arr.length,  randomIndex;
+    while (currentIndex != 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [arr[currentIndex], arr[randomIndex]] = [
+        arr[randomIndex], arr[currentIndex]];
+    }
+    return arr;
+  }
+
 function uniqueArray(arr){
     let a = [];
     for (let i=0, l= arr.length; i<l; i++)
@@ -51,4 +62,4 @@ function uniqueArray(arr){
     return a;
 }
 
-export { capitalize, checkExpired, generateCodeChallenge, generateCodeVerifier, lowercase, pathIncludes, qs, qsa, uniqueArray };
+export { capitalize, checkExpired, generateCodeChallenge, generateCodeVerifier, lowercase, pathIncludes, qs, qsa, shuffleArray, uniqueArray };

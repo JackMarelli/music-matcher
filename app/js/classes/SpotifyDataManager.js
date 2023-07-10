@@ -1,4 +1,4 @@
-import { generateCodeVerifier, generateCodeChallenge } from "../utils.js";
+import { generateCodeVerifier, generateCodeChallenge , shuffleArray} from "../utils.js";
 export default class SpotifyDataManager {
   #clientId = "5d488b4b52a34dfe8ef7a5db254489d2";
   #currentUser = null;
@@ -38,7 +38,8 @@ export default class SpotifyDataManager {
     return playlist.id;
   }
 
-  async #fetchEveryUserResponses(users, limit, token) {
+  async #fetchEveryUserResponses(users, token) {
+    let limit = Math.floor(50 / users.length);
     let playlist = [];
     for await (let user of users) {
       const seeds = user.r3.slice(0, 5).join(",");
@@ -49,22 +50,6 @@ export default class SpotifyDataManager {
     return playlist;
   }
 
-  async #fetchMixed(users, limit, token) {
-    let playlist = [];
-    let seeds = "";
-    for await (let user of users) {
-      seeds += user.r3.slice(0, 5).join(",");
-      
-      
-    }
-    console.log(seeds);
-    // while (){
-    //   const res = await this.#fetchWebApi(token,`v1/recommendations?limit=${limit}&seed_artists=${seeds}`,"GET");
-    //   playlist = playlist.concat(res.tracks);
-    //   console.log(playlist);
-    // }
-    // return playlist;
-  }
 
   async #fetchWebApi(token, endpoint, method, body) {
     const result = await fetch(`https://api.spotify.com/${endpoint}`, {
@@ -98,21 +83,20 @@ export default class SpotifyDataManager {
     return await this.#fetchWebApi(token, "v1/me", "GET");
   }
 
-  async getPlaylist(token, artists, users) {
-    let limit = Math.floor(50 / users.length);
-    return await this.#fetchEveryUserResponses(users, limit, token); 
-
-
-
-    //da eliminare e/o da rifare
-    const seed_artists = artists.join(",");
-    const result = await this.#fetchWebApi(
-      token,
-      `v1/recommendations?limit=${limit}&seed_artists=${seed_artists}`,
-      "GET"
-    );
-    console.log(await result.tracks);
-    return await result.tracks;
+  async getPlaylist(token, users) {
+    //return await this.#fetchEveryUserResponses(users, token); 
+    let playlist = [];
+    let seeds = [];
+    for (let user of users) seeds = seeds.concat(user.r3);
+    seeds = shuffleArray(seeds);
+    const num = Math.ceil(seeds.length / 4);
+    let newLimit = Math.floor(50 / num);
+    for (let i = 0; i < num; i++) {
+      const lim_seeds = seeds.splice(0, 4).join(",");
+      const res = await this.#fetchWebApi(token,`v1/recommendations?limit=${newLimit}&seed_artists=${lim_seeds}`,"GET");
+      playlist = playlist.concat(res.tracks);
+    }
+    return playlist;
   }
 
   async getArtists(token, genres = [], countries = null) {
@@ -121,9 +105,6 @@ export default class SpotifyDataManager {
     else filters = genres;
     const seeds = filters.join(",");
     let result = await this.#fetchWebApi(token,`v1/search?q=%20genre:${seeds}&type=artist&limit=50&offset=3`,"GET");
-   
-    
-    console.log(await result.artists.items.length);
     if ((await result.artists.items.length) < 5 && filters !== genres) {
       return await this.getArtists(token, genres);
     } else return await result;
