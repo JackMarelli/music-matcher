@@ -209,6 +209,21 @@ button {
   border-radius: 12px;
 }
 
+
+input[type="checkbox"]  {
+  display: none;
+}
+
+input[type="checkbox"] + label{
+  background:url('../assets/images/svg/check-empty.svg') no-repeat;
+  padding-left: 25px;
+}
+
+input[type="checkbox"]:checked + label{
+  background:url('../assets/images/svg/check-full.svg') no-repeat;
+  padding-left: 25px;
+}
+
 .song-container .info {
   flex-grow: 1;
   padding: 8px;

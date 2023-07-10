@@ -6,11 +6,11 @@ import {
   uniqueArray,
   pathIncludes,
 } from "./utils.js";
-import { showTurnLoader, waitingDots } from "./animations.js";
-import SpotifyDataManager from "./classes/SpotifyDataManager.js";
 import Host from "./classes/Host.js";
 import Playlist from "./classes/Playlist.js";
+import { showTurnLoader, waitingDots } from "./animations.js";
 import Song from "./classes/Song.js";
+import SpotifyDataManager from "./classes/SpotifyDataManager.js";
 import User from "./classes/User.js";
 
 const _app = {};
@@ -35,7 +35,7 @@ _app.appendAboutPrivacy = () => {
     aboutEl.classList.add("py-3");
     aboutEl.classList.add("slideIn");
     aboutEl.innerHTML = `<div class="d-flex justify-content-between w-100"><h2 class="fs-2">About Us</h2><div id="closeAbout" class="mm-cta-small fs-6">Close</div></div><h3 class="fs-5">About Music Matcher</h3>
-    <p class="fs-6">
+    <p class="fs-5">
       Welcome to Music Matcher, the ultimate app that brings people together
       through the power of music! At Music Matcher, we believe that music has
       a unique ability to bridge gaps, dissolve disagreements, and create
@@ -44,31 +44,31 @@ _app.appendAboutPrivacy = () => {
       with your friends.
     </p>
     <h3 class="fs-5">How does Music Matcher work?</h3>
-    <p class="fs-6">
+    <p class="fs-5">
       Music Matcher is incredibly simple and intuitive to use. Here's how it
       works:
     </p>
     <ol>
-      <li class="fs-6">
+      <li class="fs-5">
         Connect with Spotify: Sync your app and give us permission required to
         create a new playlist.
       </li>
-      <li class="fs-6">
+      <li class="fs-5">
         Answer a quiz: choose what you prefer and pass the device to a friend
         when you are done. Music Matcher serves as a hub of musical
         exploration and inspiration.
       </li>
-      <li class="fs-6">
+      <li class="fs-5">
         dit your playlists together: Explore the diverse musical preferences
         of your friends and discover exciting artists and genres you might
         have never encountered before.
-      </li class="fs-6">
-      <li class="fs-6">
+      </li class="fs-5">
+      <li class="fs-5">
         Enjoy Anywhere, Anytime: Once the playlist is created and exported,
         everyone can listen to it on Spotify,
       </li>
     </ol>
-    <p class="fs-6">
+    <p class="fs-5">
       Whether you're looking to discover new music, strengthen friendships, or
       simply enjoy a synchronized music experience with your loved ones, Music
       Matcher is the perfect app for you.
@@ -90,22 +90,22 @@ _app.appendAboutPrivacy = () => {
     privacyEl.classList.add("container");
     privacyEl.classList.add("py-3");
     privacyEl.classList.add("slideIn");
-    privacyEl.innerHTML = `<div class="d-flex justify-content-between w-100"><h2 class="fs-2">Privacy Policy</h2><div id="closePrivacy" class="mm-cta-small fs-6">Close</div></div><h3 class="fs-5">Collection and use of personal information</h3>
-    <p class="fs-6">
+    privacyEl.innerHTML = `<div class="d-flex justify-content-between w-100"><h2 class="fs-2">Privacy Policy</h2><div id="closePrivacy" class="mm-cta-small fs-5">Close</div></div><h3 class="fs-5">Collection and use of personal information</h3>
+    <p class="fs-5">
     At Music Matcher, we value your privacy and are committed to protecting your personal information. This Privacy Policy explains how your data is handled when using our app in conjunction with Spotify.
     </p>
     <h3 class="fs-5">Data Storage and Security</h3>
-    <p class="fs-6">
+    <p class="fs-5">
     Music Matcher operates on a local storage model, meaning all data related to your app usage is stored locally on your device. We do not store any user data on our servers or any external databases. </p>
       <h3 class="fs-5">Spotify Integration and Data Handling</h3>
-    <p class="fs-6">
+    <p class="fs-5">
     When you connect your Music Matcher account with Spotify, the app utilizes Spotify's APIs to access your music preferences, playlists, and related data. It is important to note that Music Matcher does not directly collect, store, or transmit any of your personal data.
     </p>
-    <p class="fs-6">
+    <p class="fs-5">
     Your interaction with Spotify, including your Spotify account details, playlists, and music history, is governed by Spotify's Privacy Policy and Terms of Service. We encourage you to review Spotify's policies to understand how they handle and safeguard your information.
     </p>
       <h3 class="fs-5">Terms</h3>
-    <p class="fs-6">
+    <p class="fs-5">
     By using the Music Matcher app and connecting with Spotify, you acknowledge that you have read, understood, and consent to the terms and practices outlined in this Privacy Policy.
     </p>
     `;
@@ -224,6 +224,7 @@ _app.createQuiz = (options) => {
 
     let labelQuiz = document.createElement("label");
     labelQuiz.htmlFor = `${option}`;
+    labelQuiz.className = "cursor-pointer";
     labelQuiz.innerHTML = `${capitalize(option)}`;
 
     quizDiv.appendChild(inputQuiz);
@@ -362,6 +363,7 @@ _app.registerQuizResponse = () => {
 _app.setQuizTitles = (title = "", n = 1) => {
   const quizTitle = qs(".quiz-title");
   const maxTitle = qs(".quiz-title-max");
+  maxTitle.classList.remove("text-danger");
   if (quizTitle) quizTitle.innerHTML = title;
   if (maxTitle) maxTitle.innerHTML = `max. ${n}`;
 };
@@ -371,11 +373,19 @@ _app.selectionLimitQuiz = (n) => {
   for (let i = 0; i < checks.length; i++) checks[i].onclick = selectiveCheck;
   function selectiveCheck() {
     let checkedChecks = qsa(".checkbox:checked");
-    if (checkedChecks.length >= n + 1) return false;
+    if (checkedChecks.length >= n + 1) {
+      qs(".quiz-title-max").classList.add("text-danger");
+      return false;
+    }
   }
 };
 
 //General
+_app.clearLocalStorage = () => {
+  localStorage.clear();
+  document.location = "/app/pages/spotifylogin.html";
+};
+
 _app.detectPhase = () => {
   if (
     pathIncludes("pages") &&
@@ -413,10 +423,6 @@ _app.detectPhase = () => {
   }
 };
 
-_app.requestSpotifyAuth = () => {
-  if (!localStorage.host) _app.sdm.authentication();
-};
-
 _app.initSpotifyData = () => {
   if (localStorage.host) {
     _app.loadLocalStorage();
@@ -435,23 +441,6 @@ _app.initSpotifyData = () => {
       _app.detectPhase();
     });
   }
-};
-
-_app.displayUser = () => {
-  if (_app.host && pathIncludes("setup.html")) {
-    const profileImage = new Image(50, 50);
-    profileImage.src = _app.host.img;
-    qs("#avatar").appendChild(profileImage);
-  }
-};
-
-_app.clearLocalStorage = () => {
-  localStorage.clear();
-  document.location = "/app/pages/spotifylogin.html";
-};
-
-_app.saveLocalData = () => {
-  localStorage.host = JSON.stringify(_app.host);
 };
 
 _app.loadLocalStorage = () => {
@@ -487,9 +476,9 @@ _app.requestArtist = async (genres, countries) => {
     artistsHTML += `
         <div class="col-12">
           <div class="artist-box">
+            <input type="checkbox" value=${artist.id} class="checkbox mx-3 song-checkbox" id=${artist.id}>
+            <label class="mx-1" for="${artist.id}">${artist.name} </label>
             <img class="p-1" src=${img}></img>
-              <label class="mx-1" for=>${artist.name} </label>
-            <input type="checkbox" value=${artist.id} class="checkbox mx-3" id=${artist.id}>
           </div>
         </div>`;
   });
@@ -497,6 +486,14 @@ _app.requestArtist = async (genres, countries) => {
   qsa(".checkbox").forEach((item) => {
     item.addEventListener("click", _app.selectionLimitQuiz(4));
   });
+};
+
+_app.requestSpotifyAuth = () => {
+  if (!localStorage.host) _app.sdm.authentication();
+};
+
+_app.saveLocalData = () => {
+  localStorage.host = JSON.stringify(_app.host);
 };
 
 //Handle result Playlist
@@ -588,7 +585,7 @@ _app.requestPlaylist = async (artists) => {
     deleteButton.className = "remove-button cursor-pointer";
     deleteButton.src = "../assets/images/svg/remove-song.svg";
 
-    deleteButton.addEventListener("click", function (e) {
+    deleteButton.addEventListener("click", (e) => {
       _app.removeSong(e, song.id);
     });
     _app.playlistContainer.appendChild(songDiv);
